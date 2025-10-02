@@ -3,12 +3,12 @@
 
 module Export
 
-import ACE, JuLIP
-using ACE.RPI: RnYlm1pBasis, RnYlmBasisFcn
-using ACE: PIBasis, PIBasisFcn, PIPotential
-using ACE: rand_radial, cutoff, numz
+import ACEfrictionCore, JuLIP
+using ACEfrictionCore.RPI: RnYlm1pBasis, RnYlmBasisFcn
+using ACEfrictionCore: PIBasis, PIBasisFcn, PIPotential
+using ACEfrictionCore: rand_radial, cutoff, numz
 using JuLIP: energy, bulk, i2z, z2i, chemical_symbol
-using ACE.PairPotentials: RepulsiveCore, PolyPairPot
+using ACEfrictionCore.PairPotentials: RepulsiveCore, PolyPairPot
 
 function export_ace(fname::AbstractString, args...;  kwargs...)
    fptr = open(fname; write=true)
@@ -74,7 +74,7 @@ function export_ace(fptr::IOStream, V::PIPotential, Vpair=nothing, V0=nothing; k
    end
 
    println(fptr, "")
-   println(fptr, "radbasename=ACE.jl.Basic")
+   println(fptr, "radbasename=ACEfrictionCore.jl.Basic")
    println(fptr, "haspair: $(haspair)")
    println(fptr, "")
 

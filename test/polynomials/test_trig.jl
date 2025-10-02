@@ -1,8 +1,8 @@
 ##
 
-import ACE, ACEbase, ACE.ACEbase024
-using LinearAlgebra, StaticArrays, Test, Printf, ACE.Testing
-using ACE: evaluate, evaluate_d, evaluate_ed, Trig1pBasis, Trig
+import ACEfrictionCore, ACEbase, ACEfrictionCore.ACEbase024
+using LinearAlgebra, StaticArrays, Test, Printf, ACEfrictionCore.Testing
+using ACEfrictionCore: evaluate, evaluate_d, evaluate_ed, Trig1pBasis, Trig
 
 ##
 
@@ -11,7 +11,7 @@ using ACE: evaluate, evaluate_d, evaluate_ed, Trig1pBasis, Trig
 for ntest = 1:30 
    θ = 2*π*rand() - π 
    rr = [cos(θ), sin(θ)]
-   print_tf(@test( ACE._theta(rr) ≈ θ ))
+   print_tf(@test( ACEfrictionCore._theta(rr) ≈ θ ))
 end
 println()
 
@@ -20,8 +20,8 @@ println()
 @info("test gradient of coordinate transform")
 for ntest = 1:30
    rr = randn(2) # [cos(θ), sin(θ)]
-   G = rr -> ACE._theta(rr)
-   dG = rr -> ACE._theta_ed(rr)[2] |> Vector
+   G = rr -> ACEfrictionCore._theta(rr)
+   dG = rr -> ACEfrictionCore._theta_ed(rr)[2] |> Vector
    print_tf(@test( all( 
             ACEbase.Testing.fdtest(G, dG, rr; verbose=false) 
          )))
@@ -53,8 +53,8 @@ E, dE = evaluate_ed(bE, rr)
 for ntest = 1:30 
    rr = randn(2) 
    U = randn(length(E))
-   F = rr -> ACE.contract(evaluate(bE, rr), U)
-   dF = rr -> Vector(ACE.contract(evaluate_ed(bE, rr)[2], U))
+   F = rr -> ACEfrictionCore.contract(evaluate(bE, rr), U)
+   dF = rr -> Vector(ACEfrictionCore.contract(evaluate_ed(bE, rr)[2], U))
    print_tf(@test( all(
           ACEbase.Testing.fdtest(F, dF, rr; verbose=false) 
       )))

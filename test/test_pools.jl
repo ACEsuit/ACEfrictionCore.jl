@@ -1,10 +1,10 @@
 
 
-using ACE, BenchmarkTools
+using ACEfrictionCore, BenchmarkTools
 
-pool = ACE.ArrayCache{Float64}()
+pool = ACEfrictionCore.ArrayCache{Float64}()
 
-newpool = ACE.GenArrayCache()
+newpool = ACEfrictionCore.GenArrayCache()
 
 ##
 
@@ -24,12 +24,12 @@ x = rand(1000)
 ##
 
 function runn2(cache, N, len)
-   x = ACE.acquire!(cache, len)
+   x = ACEfrictionCore.acquire!(cache, len)
    fill!(x.A, 0)
    for n = 1:N, i = 1:len 
       x[i] += i/n
    end 
-   ACE.release!(x)
+   ACEfrictionCore.release!(x)
    return nothing 
 end
 

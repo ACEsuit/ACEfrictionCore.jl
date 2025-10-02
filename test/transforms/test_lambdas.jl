@@ -1,7 +1,7 @@
 
 
-using ACE, Test, StaticArrays, BenchmarkTools, ACEbase, ACE.ACEbase024 
-using ACE: read_dict, write_dict, evaluate
+using ACEfrictionCore, Test, StaticArrays, BenchmarkTools, ACEbase, ACEfrictionCore.ACEbase024 
+using ACEfrictionCore: read_dict, write_dict, evaluate
 using ACEbase.Testing: println_slim, print_tf, fdtest, test_fio 
 using LinearAlgebra: norm 
 

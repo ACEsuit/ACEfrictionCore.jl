@@ -1,5 +1,5 @@
 
-import ACE.Transforms: GetVal
+import ACEfrictionCore.Transforms: GetVal
 
 @doc raw"""
 `Ylm1pBasis`

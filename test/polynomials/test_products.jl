@@ -5,10 +5,10 @@
 @info("--------- Testing Products of Polynomials ----------")
 
 ##
-using ACE, Test, JuLIP, JuLIP.Testing #, ForwardDiff
+using ACEfrictionCore, Test, JuLIP, JuLIP.Testing #, ForwardDiff
 
 using LinearAlgebra: norm, cond
-using ACE.OrthPolys: OrthPolyBasis
+using ACEfrictionCore.OrthPolys: OrthPolyBasis
 using JuLIP: evaluate, evaluate_d
 
 ##
@@ -21,7 +21,7 @@ Jd = OrthPolyBasis(maxn, 2, 1.0, 1, -1.0, tdf, ww)
 ##
 
 @info("Testing the Expansion of products of radial polynomials")
-coeffs = ACE.OrthPolys.OrthPolyProdCoeffs(Jd)
+coeffs = ACEfrictionCore.OrthPolys.OrthPolyProdCoeffs(Jd)
 
 for n1 = 1:5, n2 = 1:5
    # product
@@ -39,8 +39,8 @@ end
 ##
 
 @info("Testing Expansion of Products of Spherical Harmonics")
-using ACE.Orth: SHProdCoeffs
-using ACE.SphericalHarmonics: SHBasis, index_y
+using ACEfrictionCore.Orth: SHProdCoeffs
+using ACEfrictionCore.SphericalHarmonics: SHBasis, index_y
 
 coeffs = SHProdCoeffs()
 for l1 = 0:4, l2=l1:4, m1 = -l1:l1, m2 = -l2:l2

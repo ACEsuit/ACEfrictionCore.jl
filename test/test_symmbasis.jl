@@ -3,18 +3,18 @@
 
 ##
 
-using ACE
-using StaticArrays, Random, Printf, Test, LinearAlgebra, ACE.Testing
-using ACE: evaluate, evaluate_d, SymmetricBasis, PIBasis, O3, rand_vec3 
-using ACE.Random: rand_rot, rand_refl
+using ACEfrictionCore
+using StaticArrays, Random, Printf, Test, LinearAlgebra, ACEfrictionCore.Testing
+using ACEfrictionCore: evaluate, evaluate_d, SymmetricBasis, PIBasis, O3, rand_vec3 
+using ACEfrictionCore.Random: rand_rot, rand_refl
 using ACEbase.Testing: fdtest, println_slim
-using ACE.Testing: __TestSVec
+using ACEfrictionCore.Testing: __TestSVec
 
 # using Profile, ProfileView
 
 # Extra using Wigner for computing Wigner Matrix
-using ACE.Wigner
-using ACE.Wigner: get_orbsym
+using ACEfrictionCore.Wigner
+using ACEfrictionCore.Wigner: get_orbsym
 
 ##
 # construct the 1p-basis
@@ -22,7 +22,7 @@ maxdeg = 6
 ord = 3
 Bsel = SimpleSparseBasis(ord, maxdeg)
 
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
 
 # generate a configuration
 nX = 10
@@ -35,7 +35,7 @@ cfg = ACEConfig(Xs)
 
 @info("SymmetricBasis construction and evaluation: Invariant Scalar")
 
-φ = ACE.Invariant()
+φ = ACEfrictionCore.Invariant()
 basis = SymmetricBasis(φ, B1p, Bsel)
 @time SymmetricBasis(φ, B1p, Bsel);
 
@@ -69,7 +69,7 @@ println()
 ## 
 
 @info("Test Invariant Basis without Constant")
-basis_noc = SymmetricBasis(φ, B1p, Bsel; filterfun = ACE.NoConstant())
+basis_noc = SymmetricBasis(φ, B1p, Bsel; filterfun = ACEfrictionCore.NoConstant())
 println_slim(@test length(basis_noc) == length(basis) - 1)
 BB_noc = evaluate(basis_noc, cfg)
 println_slim(@test (BB_noc == BB[2:end]))
@@ -82,14 +82,14 @@ try
    cfg_empty = ACEConfig(Xs_empty)
    B_empty = evaluate(basis, cfg_empty)
    println(@test( all(iszero, B_empty[2:end]) ))
-   println(@test( B_empty[1] == ACE.Invariant(1.0) ) )
+   println(@test( B_empty[1] == ACEfrictionCore.Invariant(1.0) ) )
 catch 
    @warn("The behaviour is as expected - throwing an error. But maybe this needs to be fixed.")
 end
 
 ##
 
-import ACEbase, ACE.ACEbase024
+import ACEbase, ACEfrictionCore.ACEbase024
 @info("Test FIO")
 let basis1 = basis 
    println_slim(@test(all(ACEbase.Testing.test_fio(basis1; warntype=false))))
@@ -109,7 +109,7 @@ end
 println_slim(@test rank(A) == length(basis))
 
 # ## Keep for futher profiling
-# φ = ACE.Invariant()
+# φ = ACEfrictionCore.Invariant()
 # pibasis = PIBasis(B1p, ord, maxdeg; property = φ)
 # basis = SymmetricBasis(pibasis, φ)
 # @time SymmetricBasis(pibasis, φ);
@@ -126,11 +126,11 @@ println_slim(@test rank(A) == length(basis))
 
 
 # for ntest = 1:30
-#    _rrval(x::ACE.XState) = x.rr
+#    _rrval(x::ACEfrictionCore.XState) = x.rr
 #    Us = randn(SVector{3, Float64}, length(Xs))
 #    c = randn(length(basis))
-#    F = t -> sum(c .* ACE.evaluate(basis, ACEConfig(Xs + t[1] * Us))).val
-#    dF = t -> [ Us' * _rrval.(sum(c .* ACE.evaluate_d(basis, ACEConfig(Xs + t[1] * Us)), dims=1)[:]) ]
+#    F = t -> sum(c .* ACEfrictionCore.evaluate(basis, ACEConfig(Xs + t[1] * Us))).val
+#    dF = t -> [ Us' * _rrval.(sum(c .* ACEfrictionCore.evaluate_d(basis, ACEConfig(Xs + t[1] * Us)), dims=1)[:]) ]
 #    print_tf(@test fdtest(F, dF, [0.0], verbose=false))
 # end
 # println()
@@ -142,15 +142,15 @@ println_slim(@test rank(A) == length(basis))
 for L = 0:3
    @info "Tests for L = $L ⇿ $(get_orbsym(0))-$(get_orbsym(L)) block"
    local φ, pibasis, basis, BB, Iz, B1p 
-   φ = ACE.SphericalVector(L; T = ComplexF64)
-   B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+   φ = ACEfrictionCore.SphericalVector(L; T = ComplexF64)
+   B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
    B1pa = deepcopy(B1p); B1pb = deepcopy(B1p)
    basis = SymmetricBasis(φ, B1p, Bsel)
    @time SymmetricBasis(φ, B1pa, Bsel)
    BB = evaluate(basis, cfg)
 
    @info("check that no-const gives the same (sub-)basis")
-   basis0 = SymmetricBasis(φ, B1pb, Bsel; filterfun = ACE.NoConstant())
+   basis0 = SymmetricBasis(φ, B1pb, Bsel; filterfun = ACEfrictionCore.NoConstant())
    BB0 = evaluate(basis0, cfg)
    if L == 0 
       println_slim(@test BB[2:end] ≈ BB0)   
@@ -166,7 +166,7 @@ for L = 0:3
    @info("check symmetry ")
    for ntest = 1:30
       local Q, D, BB1 
-      Q, D = ACE.Wigner.rand_QD(L)
+      Q, D = ACEfrictionCore.Wigner.rand_QD(L)
       cfg1 = ACEConfig( shuffle(Ref(Q) .* Xs) )
       BB1 = evaluate(basis, cfg1)
       DtxBB1 = Ref(D') .* BB1
@@ -186,8 +186,8 @@ end
 for L1 = 0:2, L2 = 0:2
    @info "Tests for L₁ = $L1, L₂ = $L2 ⇿ $(get_orbsym(L1))-$(get_orbsym(L2)) block"
    local φ, pibasis, basis, BB, Iz, B1p 
-   φ = ACE.SphericalMatrix(L1, L2; T = ComplexF64)
-   B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+   φ = ACEfrictionCore.SphericalMatrix(L1, L2; T = ComplexF64)
+   B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
    # TODO: these deepcopies should not be needed, what's going on here? 
    #       probably caused by sparsification, but it still shouldn't cause an error
    B1pa = deepcopy(B1p); B1pb = deepcopy(B1p)
@@ -196,7 +196,7 @@ for L1 = 0:2, L2 = 0:2
    BB = evaluate(basis, cfg)
 
    @info("check that no-const gives the same (sub-)basis")
-   basis0 = SymmetricBasis(φ, B1pb, Bsel; filterfun = ACE.NoConstant())
+   basis0 = SymmetricBasis(φ, B1pb, Bsel; filterfun = ACEfrictionCore.NoConstant())
    BB0 = evaluate(basis0, cfg)
    if L1 == L2  
       println_slim(@test BB[2:end] ≈ BB0)
@@ -207,7 +207,7 @@ for L1 = 0:2, L2 = 0:2
    @info("check symmetry ")
    for ntest = 1:30
       local Q, D1, D2, BB1 
-      Q, D1, D2 = ACE.Wigner.rand_QD(L1, L2)
+      Q, D1, D2 = ACEfrictionCore.Wigner.rand_QD(L1, L2)
       cfg1 = ACEConfig( shuffle(Ref(Q) .* Xs) )
       BB1 = evaluate(basis, cfg1)
       D1txBB1xD2 = Ref(D1') .* BB1 .* Ref(D2)
@@ -223,11 +223,11 @@ end
 for L = 0:3
    @info "L = $L"
    local Xs, cfg, B1p 
-   φ1 = ACE.SphericalVector(L; T = ComplexF64)
-   B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+   φ1 = ACEfrictionCore.SphericalVector(L; T = ComplexF64)
+   B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
    basis1 = SymmetricBasis(φ1, deepcopy(B1p), Bsel)
 
-   φ2 = ACE.SphericalMatrix(L, 0; T = ComplexF64)
+   φ2 = ACEfrictionCore.SphericalMatrix(L, 0; T = ComplexF64)
    basis2 = SymmetricBasis(φ2, deepcopy(B1p), Bsel)
 
    for ntest = 1:30
@@ -245,10 +245,10 @@ end
 ##
 @info("Consistency between Invariant Scalar & SphericalMatrix")
 
-φ = ACE.Invariant()
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+φ = ACEfrictionCore.Invariant()
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
 basis = SymmetricBasis(φ, deepcopy(B1p), Bsel)
-φ2 = ACE.SphericalMatrix(0, 0; T = ComplexF64)
+φ2 = ACEfrictionCore.SphericalMatrix(0, 0; T = ComplexF64)
 basis2 = SymmetricBasis(φ2, deepcopy(B1p), Bsel)
 
 for ntest = 1:30
@@ -266,7 +266,7 @@ println()
 # ## Keep for futher profiling
 #
 # L1 = 1; L2 = 1
-# φ = ACE.SphericalMatrix(L1, L2; T = ComplexF64)
+# φ = ACEfrictionCore.SphericalMatrix(L1, L2; T = ComplexF64)
 # pibasis = PIBasis(B1p, ord, maxdeg; property = φ, isreal = false)
 # basis = SymmetricBasis(pibasis, φ)
 # @time SymmetricBasis(pibasis, φ);
@@ -280,9 +280,9 @@ println()
 
 @info("Test the chained version of SymmetricBasis")
 # construct the 1p-basis
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
 cfg = ACEConfig([ _randX() for _=1:nX ])
-basis = ACE.SymmetricBasis(ACE.Invariant(), B1p, Bsel)
-basis_c = ACE.chain(B1p, basis.pibasis, basis)
+basis = ACEfrictionCore.SymmetricBasis(ACEfrictionCore.Invariant(), B1p, Bsel)
+basis_c = ACEfrictionCore.chain(B1p, basis.pibasis, basis)
 println_slim(@test evaluate(basis, cfg) == evaluate(basis_c, cfg))
 

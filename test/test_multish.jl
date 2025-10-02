@@ -3,13 +3,13 @@
 
 ##
 
-using ACE
-using StaticArrays, Random, Printf, Test, LinearAlgebra, ACE.Testing
-using ACE: evaluate, evaluate_d, SymmetricBasis, PIBasis, 
+using ACEfrictionCore
+using StaticArrays, Random, Printf, Test, LinearAlgebra, ACEfrictionCore.Testing
+using ACEfrictionCore: evaluate, evaluate_d, SymmetricBasis, PIBasis, 
            State, O3, rand_sphere
-using ACE.Random: rand_rot, rand_refl
+using ACEfrictionCore.Random: rand_rot, rand_refl
 using ACEbase.Testing: fdtest, println_slim 
-using ACE.Testing: __TestSVec
+using ACEfrictionCore.Testing: __TestSVec
 
 ## FIRST TEST (l, m) vs custom (lr, ms) 
 
@@ -18,14 +18,14 @@ maxdeg = 5
 ord = 3
 Bsel = SimpleSparseBasis(ord, maxdeg)
 
-B1p_r = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg, 
+B1p_r = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg, 
                                   varsym = :rr, idxsyms = (:nr, :lr, :mr))
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg,  )
-@show ACE.symbols(B1p_r)
-@show ACE.indexrange(B1p_r)
-println_slim(@test all( ACE.indexrange(B1p_r)[symr] == ACE.indexrange(B1p)[sym]
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg,  )
+@show ACEfrictionCore.symbols(B1p_r)
+@show ACEfrictionCore.indexrange(B1p_r)
+println_slim(@test all( ACEfrictionCore.indexrange(B1p_r)[symr] == ACEfrictionCore.indexrange(B1p)[sym]
                    for (symr, sym) in ((:nr, :n), (:lr, :l), (:mr, :m)) ) )
-φ = ACE.Invariant()
+φ = ACEfrictionCore.Invariant()
 basis = SymmetricBasis(φ, B1p, O3(), Bsel)
 basis_r = SymmetricBasis(φ, B1p_r, O3(:lr, :mr), Bsel)
 
@@ -49,17 +49,17 @@ MagState = typeof(X)
 Base.rand(::Type{MagState}) = MagState( rr = rand_vec3(Rn), ss = rand_sphere() )
 Base.rand(::Type{MagState}, N::Integer) = [ rand(MagState) for _ = 1:N ]
 
-B1p_r = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg, 
+B1p_r = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg, 
                                   varsym = :rr, idxsyms = (:nr, :lr, :mr))
-B1p_s = ACE.Ylm1pBasis(maxdeg; varsym = :ss, lsym = :ls, msym = :ms)
+B1p_s = ACEfrictionCore.Ylm1pBasis(maxdeg; varsym = :ss, lsym = :ls, msym = :ms)
 B1p = B1p_r * B1p_s
-@show ACE.symbols(B1p)
-@show ACE.indexrange(B1p)
+@show ACEfrictionCore.symbols(B1p)
+@show ACEfrictionCore.indexrange(B1p)
 
 
-ACE.init1pspec!(B1p, Bsel)
+ACEfrictionCore.init1pspec!(B1p, Bsel)
 length(B1p)
-spec = ACE.get_spec(B1p)
+spec = ACEfrictionCore.get_spec(B1p)
 
 # generate a configuration
 nX = 10
@@ -81,7 +81,7 @@ basis = SymmetricBasis(φ, B1p, O3(:lr, :mr), Bsel)
 for ntest = 1:30
    local cfg 
    cfg = ACEConfig(rand(MagState, nX))
-   Qr = ACE.Random.rand_rot() * ACE.Random.rand_refl()
+   Qr = ACEfrictionCore.Random.rand_rot() * ACEfrictionCore.Random.rand_refl()
    cfg_sym = ACEConfig( shuffle( [MagState(rr = Qr * X.rr, ss = X.ss) for X in cfg] ) )   
    print_tf(@test( evaluate(basis, cfg) ≈ evaluate(basis, cfg_sym) )) 
 end
@@ -94,8 +94,8 @@ for ntest = 1:30
    global toterr_rs, toterr_rr
    local cfg 
    cfg = ACEConfig(rand(MagState, nX))
-   Qr = ACE.Random.rand_rot() * ACE.Random.rand_refl()
-   Qs = ACE.Random.rand_rot() * ACE.Random.rand_refl()
+   Qr = ACEfrictionCore.Random.rand_rot() * ACEfrictionCore.Random.rand_refl()
+   Qs = ACEfrictionCore.Random.rand_rot() * ACEfrictionCore.Random.rand_refl()
    cfg_rs = ACEConfig( shuffle( [MagState(rr = Qr * X.rr, ss = Qs * X.ss) for X in cfg] ) )
    cfg_rr = ACEConfig( shuffle( [MagState(rr = Qr * X.rr, ss = Qr * X.ss) for X in cfg] ) )
    toterr_rs += norm( evaluate(basis, cfg) - evaluate(basis, cfg_rs), Inf )
@@ -118,8 +118,8 @@ basis = SymmetricBasis(φ, B1p, O3(:lr, :mr) ⊗ O3(:ls, :ms), Bsel)
 for ntest = 1:30
    local cfg 
    cfg = ACEConfig(rand(MagState, nX))
-   Qr = ACE.Random.rand_rot() * ACE.Random.rand_refl()
-   Qs = ACE.Random.rand_rot() * ACE.Random.rand_refl()
+   Qr = ACEfrictionCore.Random.rand_rot() * ACEfrictionCore.Random.rand_refl()
+   Qs = ACEfrictionCore.Random.rand_rot() * ACEfrictionCore.Random.rand_refl()
    cfg_rs = ACEConfig( shuffle( [MagState(rr = Qr * X.rr, ss = Qs * X.ss) for X in cfg] ) )
    B = evaluate(basis, cfg)
    B_rs = evaluate(basis, cfg_rs)

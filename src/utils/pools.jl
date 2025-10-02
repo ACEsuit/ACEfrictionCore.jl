@@ -1,4 +1,4 @@
-import ACE.ACEbase024: acquire!, release! 
+import ACEfrictionCore.ACEbase024: acquire!, release! 
 using Base.Threads: threadid, nthreads
 using DataStructures: Stack 
 

@@ -2,21 +2,21 @@
 
 
 ##
-using ACE, StaticArrays, ACE.SphericalHarmonics;
-using ACEbase, ACE.ACEbase024
-using ACE.SphericalHarmonics: index_y;
-using ACE: evaluate
-using Random, Printf, Test, ACE.Testing
-using ACE, Test, Printf, LinearAlgebra, BenchmarkTools
+using ACEfrictionCore, StaticArrays, ACEfrictionCore.SphericalHarmonics;
+using ACEbase, ACEfrictionCore.ACEbase024
+using ACEfrictionCore.SphericalHarmonics: index_y;
+using ACEfrictionCore: evaluate
+using Random, Printf, Test, ACEfrictionCore.Testing
+using ACEfrictionCore, Test, Printf, LinearAlgebra, BenchmarkTools
 
 
 ##
 
 for L = 0:5
    @info("Check correctness of Wigner-D matrix of order $L")
-   SH = ACE.SphericalHarmonics.SHBasis(L)
+   SH = ACEfrictionCore.SphericalHarmonics.SHBasis(L)
    for ntest = 1:20
-      Q, D = ACE.Wigner.rand_QD(L)
+      Q, D = ACEfrictionCore.Wigner.rand_QD(L)
       x = randn(SVector{3, Float64})
       x = x / norm(x)
       Y1 = evaluate(SH, x)[(L^2+1):(L+1)^2]

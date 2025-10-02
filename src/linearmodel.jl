@@ -78,12 +78,12 @@ set_params!(::NaiveEvaluator, args...) = nothing
       _allfieldsequal(V1, V2)
 
 write_dict(V::LinearACEModel) = 
-      Dict( "__id__" => "ACE_LinearACEModel", 
+      Dict( "__id__" => "ACEfrictionCore_LinearACEModel", 
              "basis" => write_dict(V.basis), 
                  "c" => write_dict(V.c), 
          "evaluator" => write_dict(V.evaluator) )
 
-function read_dict(::Val{:ACE_LinearACEModel}, D::Dict) 
+function read_dict(::Val{:ACEfrictionCore_LinearACEModel}, D::Dict) 
    basis = read_dict(D["basis"])
    c = read_dict(D["c"])
    # special evaluator version of the read_dict 
@@ -93,9 +93,9 @@ function read_dict(::Val{:ACE_LinearACEModel}, D::Dict)
 end
 
 write_dict(ev::NaiveEvaluator) = 
-      Dict("__id__" => "ACE_NaiveEvaluator" )
+      Dict("__id__" => "ACEfrictionCore_NaiveEvaluator" )
 
-read_dict(::Val{:ACE_NaiveEvaluator}, D::Dict, args...) = 
+read_dict(::Val{:ACEfrictionCore_NaiveEvaluator}, D::Dict, args...) = 
       NaiveEvaluator()
 
 
@@ -151,9 +151,9 @@ end
 # ChainRules imports removed - derivative functionality has been removed
 
 
-function _adj_evaluate(dp, model::ACE.LinearACEModel, cfg)
+function _adj_evaluate(dp, model::ACEfrictionCore.LinearACEModel, cfg)
    error("grad_params functionality has been removed")
-   # gp_ = ACE.grad_params(model, cfg)  -- removed
+   # gp_ = ACEfrictionCore.grad_params(model, cfg)  -- removed
    # gp = [ a * dp for a in gp_ ]  -- removed
    # return NoTangent(), gp, _rrule_evaluate(dp, model, cfg)  -- removed
 end

@@ -1,7 +1,7 @@
 
-import ACE.ACEbonds.BondCutoffs: env_transform, env_filter, AbstractBondCutoff
+import ACEfrictionCore.ACEbonds.BondCutoffs: env_transform, env_filter, AbstractBondCutoff
 
-import ACE: params, nparams, set_params!
+import ACEfrictionCore: params, nparams, set_params!
 
 export params, nparams, set_params!
 # TODO: extend implementation to allow for LinearModels with multiple featuers. 
@@ -39,7 +39,7 @@ end
 function set_params!(calc::ACEBondPotential, θ)
    inds =  _get_basisinds(calc)
    for zz in keys(calc.models)
-      ACE.set_params!(calc, zz, θ[inds[zz]])
+      ACEfrictionCore.set_params!(calc, zz, θ[inds[zz]])
    end
 end
 
@@ -73,7 +73,7 @@ _get_basisinds(V::ACEBondPotentialBasis) = V.inds
 
 import JuLIP: energy
 #, forces, virial 
-import ACE: evaluate #, evaluate_d, grad_config
+import ACEfrictionCore: evaluate #, evaluate_d, grad_config
 
 
 # overload the initiation of the bonds iterator to correctly extract the 
@@ -163,7 +163,7 @@ function energy(basis::ACEBondPotentialBasis, at::Atoms)
       # transform the euclidean to cylindrical coordinates
       env = env_transform(rrij, at.Z[i], at.Z[j], Rs, Zs, basis.cutoff)
       # evaluate 
-      ACE.evaluate!(Et, ace, ACE.ACEConfig(env))
+      ACEfrictionCore.evaluate!(Et, ace, ACEfrictionCore.ACEConfig(env))
       E += Et 
    end
    return E 

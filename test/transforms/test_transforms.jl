@@ -3,10 +3,10 @@
 
 
 ##
-using ACE, Printf, Test, LinearAlgebra
-using ACE: evaluate, read_dict, write_dict
+using ACEfrictionCore, Printf, Test, LinearAlgebra
+using ACEfrictionCore: evaluate, read_dict, write_dict
 using ACEbase.Testing: print_tf, println_slim, fdtest 
-using ACE.Testing
+using ACEfrictionCore.Testing
 
 verbose = false
 maxdeg = 10
@@ -20,7 +20,7 @@ for p = 2:4
    rr = 1 .+ rand(100)
    val = ((1 + r0) ./ (1 .+ rr)).^p
    println_slim(@test(trans.(rr) ≈ val))
-   ACE.Testing.test_transform(trans, [r0/2, 3*r0]); println()
+   ACEfrictionCore.Testing.test_transform(trans, [r0/2, 3*r0]); println()
 end
 println()
 
@@ -33,7 +33,7 @@ for lam = 1.0:3.0
    rr = 1 .+ rand(100)
    val = exp.( - lam * (rr/r0 .- 1))
    println_slim(@test(trans.(rr) ≈ val))
-   ACE.Testing.test_transform(trans, [r0/2, 3*r0]); println() 
+   ACEfrictionCore.Testing.test_transform(trans, [r0/2, 3*r0]); println() 
 end
 println()
 
@@ -48,7 +48,7 @@ for p = 2:4
    rr = 1 .+ rand(100)
    val = 1 ./ (1 .+ a * (rr / r0).^p)
    println_slim(@test(trans.(rr) ≈ val))
-   ACE.Testing.test_transform(trans, [r0/2, 3*r0]); println()
+   ACEfrictionCore.Testing.test_transform(trans, [r0/2, 3*r0]); println()
 end
 println()
 
@@ -66,7 +66,7 @@ println()
 # dF = t -> dot( evaluate_ed(B1, t)[2], u)
 # fdtest(F, dF, 1.235)
 
-# ACE.Testing.test_fio(trans; warntype=false)
+# ACEfrictionCore.Testing.test_fio(trans; warntype=false)
 
 
 ##
@@ -76,7 +76,7 @@ for p in 2:4
    @info("p = $p, random transform")
    trans = polytransform(1+rand(), 1+rand())
    @info("      test (de-)dictionisation")
-   @test all(ACE.Testing.test_fio(trans; warntype=false))
+   @test all(ACEfrictionCore.Testing.test_fio(trans; warntype=false))
    B1 = transformed_jacobi(maxdeg, trans, 3.0; pcut = p)
    B2 = transformed_jacobi(maxdeg, trans, 3.0, 0.5, pin = p, pcut = p)
    for B in [B1, B2]
@@ -102,7 +102,7 @@ end
 # plot(; size = (500, 300))
 # for p = 2:4
 #    tpoly = PolyTransform(p, r0)
-#    tagnesi = ACE.Transforms.AgnesiTransform(r0, p)
+#    tagnesi = ACEfrictionCore.Transforms.AgnesiTransform(r0, p)
 #    plot!(rr, tagnesi.(rr), lw=2, c=p-1, label = "p = $p")
 #    plot!(rr, tpoly.(rr), lw=2, c=p-1, ls = :dash, label = "")
 # end
@@ -125,7 +125,7 @@ end
 #       xx = T.(rr)
 #    else
 #       xx = range(x0, x1, length=nrays)
-#       rr = ACE.Transforms.inv_transform.(Ref(T), xx)
+#       rr = ACEfrictionCore.Transforms.inv_transform.(Ref(T), xx)
 #    end
 #    rnn = (rnn - rr[1]) / (rr[end] - rr[1])
 #    xnn = (xnn - xx[1]) / (xx[end] - xx[1])

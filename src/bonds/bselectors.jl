@@ -1,6 +1,6 @@
 module BondSelectors
 
-import ACE: AbstractSparseBasis, maxorder, Prodb, Onepb, OneParticleBasis, 
+import ACEfrictionCore: AbstractSparseBasis, maxorder, Prodb, Onepb, OneParticleBasis, 
             degree, CategorySparseBasis, SparseBasis 
 import Base: filter 
 
@@ -74,7 +74,7 @@ cat_weighted_degree(bb::Prodb, Bsel::SparseCylindricalBondBasis, basis::OneParti
       )
 
 """
-Constructors of this alias of ACE.CategorySparseBasis can be used to conveniently create 
+Constructors of this alias of ACEfrictionCore.CategorySparseBasis can be used to conveniently create 
 basis selectors for ACE bond bases that are defined on ellipsoid-shaped bond environments 
 implmeneted as `EllipsoidCutoff` in the sub-module `ACEbonds.BondCutoffs``. 
 """

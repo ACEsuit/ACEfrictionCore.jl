@@ -1,10 +1,10 @@
-import ACE.ACEbonds.BondSelectors: EllipsoidBondBasis
-import ACE
-import ACE: polytransform
+import ACEfrictionCore.ACEbonds.BondSelectors: EllipsoidBondBasis
+import ACEfrictionCore
+import ACEfrictionCore: polytransform
 export SymmetricEllipsoidBondBasis
 
   # explicitly included all optional arguments for transparancy
- function SymmetricEllipsoidBondBasis(ϕ::ACE.AbstractProperty; 
+ function SymmetricEllipsoidBondBasis(ϕ::ACEfrictionCore.AbstractProperty; 
        maxorder::Integer = nothing, 
        p = 1, 
        weight = Dict(:l => 1.0, :n => 1.0), 
@@ -26,7 +26,7 @@ export SymmetricEllipsoidBondBasis
  end
 
  
- function SymmetricEllipsoidBondBasis(ϕ::ACE.AbstractProperty, Bsel::ACE.SparseBasis; 
+ function SymmetricEllipsoidBondBasis(ϕ::ACEfrictionCore.AbstractProperty, Bsel::ACEfrictionCore.SparseBasis; 
       r0 = .4, 
       rin=.0, 
       trans = polytransform(2, r0), 
@@ -45,7 +45,7 @@ export SymmetricEllipsoidBondBasis
    BondSelector = EllipsoidBondBasis( Bsel; species=species, kvargs...)
    min_weight = minimum(values(BondSelector.weight_cat))
    maxdeg = Int(ceil(maximum(values(BondSelector.maxlevels))))
-   RnYlm = ACE.Utils.RnYlm_1pbasis(;  r0 = r0, 
+   RnYlm = ACEfrictionCore.Utils.RnYlm_1pbasis(;  r0 = r0, 
       rin = rin,
       trans = trans, 
       pcut = pcut,
@@ -54,19 +54,19 @@ export SymmetricEllipsoidBondBasis
       Bsel = Bsel,
       maxdeg= maxdeg * max(1,Int(ceil(1/min_weight)))
    );
-   Bc = ACE.Categorical1pBasis(cat([:bond],species, dims=1); varsym = :mube, idxsym = :mube )
+   Bc = ACEfrictionCore.Categorical1pBasis(cat([:bond],species, dims=1); varsym = :mube, idxsym = :mube )
    B1p =  Bc * RnYlm 
    return SymmetricEllipsoidBondBasis(ϕ, BondSelector, B1p; bondsymmetry=bondsymmetry)
 end
 
-function SymmetricEllipsoidBondBasis(ϕ::ACE.AbstractProperty, BondSelector::EllipsoidBondBasis, B1p::ACE.Product1pBasis; bondsymmetry=nothing)
+function SymmetricEllipsoidBondBasis(ϕ::ACEfrictionCore.AbstractProperty, BondSelector::EllipsoidBondBasis, B1p::ACEfrictionCore.Product1pBasis; bondsymmetry=nothing)
    filterfun = _->true
    if bondsymmetry == "Invariant"
-      filterfun = ACE.EvenL(:mube, [:bond])
+      filterfun = ACEfrictionCore.EvenL(:mube, [:bond])
    end
    if bondsymmetry == "Covariant"
-      filterfun = x -> !(ACE.EvenL(:mube, [:bond])(x))
+      filterfun = x -> !(ACEfrictionCore.EvenL(:mube, [:bond])(x))
    end
-   return ACE.SymmetricBasis(ϕ, B1p, BondSelector; filterfun = filterfun)
+   return ACEfrictionCore.SymmetricBasis(ϕ, B1p, BondSelector; filterfun = filterfun)
 end
 

@@ -1,5 +1,5 @@
 
-using ACE: evaluate
+using ACEfrictionCore: evaluate
 
 # ------- EndlessVector
 #   auxiliary datastructure wrapping sparse vectors

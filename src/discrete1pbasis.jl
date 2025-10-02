@@ -1,7 +1,7 @@
 
 
-import ACE.ACEbase024: Discrete1pBasis
-import ACE: evaluate, evaluate!
+import ACEfrictionCore.ACEbase024: Discrete1pBasis
+import ACEfrictionCore: evaluate, evaluate!
 
 export Categorical1pBasis
 
@@ -40,11 +40,11 @@ function val2i(list::SList, val)
 end
 
 write_dict(list::SList{N,T}) where {N, T} = 
-      Dict( "__id__" => "ACE_SList", 
+      Dict( "__id__" => "ACEfrictionCore_SList", 
                  "T" => write_dict(T),
               "list" => list.list )
 
-function read_dict(::Val{:ACE_SList}, D::Dict) 
+function read_dict(::Val{:ACEfrictionCore_SList}, D::Dict) 
    list = D["list"]
    T = read_dict(D["T"])
    svector = SVector{length(list), T}((T.(list))...)
@@ -105,7 +105,7 @@ function evaluate(basis::Categorical1pBasis, X::AbstractState)
    return evaluate!(A, basis, X)
 end
 
-function ACE.evaluate!(A, basis::Categorical1pBasis, X::AbstractState)
+function ACEfrictionCore.evaluate!(A, basis::Categorical1pBasis, X::AbstractState)
    fill!(A, false)
    A[val2i(basis.categories, _val(X, basis))] = true
    return A
@@ -132,13 +132,13 @@ get_spec(basis::Categorical1pBasis) = [ get_spec(basis, i) for i = 1:length(basi
 
 
 write_dict(B::Categorical1pBasis) = 
-      Dict( "__id__" => "ACE_Categorical1pBasis", 
+      Dict( "__id__" => "ACEfrictionCore_Categorical1pBasis", 
             "categories" => write_dict(B.categories), 
             "VSYM" => String(_varsym(B)), 
             "ISYM" => String(_isym(B)), 
             "label" => B.label)
 
-read_dict(::Val{:ACE_Categorical1pBasis}, D::Dict)  = 
+read_dict(::Val{:ACEfrictionCore_Categorical1pBasis}, D::Dict)  = 
    Categorical1pBasis( read_dict(D["categories"]), 
                   Symbol(D["VSYM"]), Symbol(D["ISYM"]), 
                   D["label"] )

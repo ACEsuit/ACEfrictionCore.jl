@@ -1,7 +1,7 @@
-using ACE, StaticArrays
-using Random, Printf, Test, LinearAlgebra, ACE.Testing
-using ACE: evaluate, evaluate_d, SymmetricBasis, PIBasis, EuclideanMatrix
-using ACE.Random: rand_rot, rand_refl, rand_vec3
+using ACEfrictionCore, StaticArrays
+using Random, Printf, Test, LinearAlgebra, ACEfrictionCore.Testing
+using ACEfrictionCore: evaluate, evaluate_d, SymmetricBasis, PIBasis, EuclideanMatrix
+using ACEfrictionCore.Random: rand_rot, rand_refl, rand_vec3
 using ACEbase.Testing: fdtest
 using ACEbase.Testing: println_slim
 # construct the 1p-basis
@@ -9,7 +9,7 @@ maxdeg = 5
 ord = 2
 Bsel = SimpleSparseBasis(ord, maxdeg)
 
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
 
 # generate a configuration
 nX = 10
@@ -23,11 +23,11 @@ cfg = ACEConfig(Xs)
 for symmetry in [:general, :symmetric] # Test fails for anti-symmetric matrices: for symmetry == :antisymmeteric the expression BB = evaluate(basis, cfg) will throw an error
    @info("Symmetry type: ", symmetry )
    if symmetry == :general
-      φ = ACE.EuclideanMatrix(Float64)
+      φ = ACEfrictionCore.EuclideanMatrix(Float64)
    elseif symmetry == :symmetric 
-      φ = ACE.SymmetricEuclideanMatrix(Float64)
+      φ = ACEfrictionCore.SymmetricEuclideanMatrix(Float64)
    else 
-      φ = ACE.AntiSymmetricEuclideanMatrix(Float64)
+      φ = ACEfrictionCore.AntiSymmetricEuclideanMatrix(Float64)
    end
    println(φ)
    pibasis = PIBasis(B1p, Bsel; property = φ)
@@ -64,7 +64,7 @@ for symmetry in [:general, :symmetric] # Test fails for anti-symmetric matrices:
          Xs = [ _randX() for _=1:nX ] 
       end
       BB = evaluate(basis, ACEConfig(Xs))
-      Q = rand([-1,1]) * ACE.Random.rand_rot()
+      Q = rand([-1,1]) * ACEfrictionCore.Random.rand_rot()
       Xs_rot = Ref(Q) .* shuffle(Xs)
       BB_rot = evaluate(basis, ACEConfig(Xs_rot))
       print_tf(@test all([ norm(Q' * b1 * Q - b2) < tol
@@ -129,30 +129,30 @@ for symmetry in [:general, :symmetric] # Test fails for anti-symmetric matrices:
       BB = evaluate(basis, ACEConfig(Xs))
       for (i,b) in enumerate(BB)
          if norm(imag(b.val)) > imtol
-            @warn( "Large imaginary part for $(ACE.get_spec(basis)[i]), $(norm(imag(b.val)))")
+            @warn( "Large imaginary part for $(ACEfrictionCore.get_spec(basis)[i]), $(norm(imag(b.val)))")
          end
       end
       #println(maximum([ norm(imag(b.val))/ norm(real(b.val))  for b in BBs  ]))
       #print_tf(@test all([ norm(imag(b.val)) < .1  for b in BB  ]))
    end
    println()
-   print(ACE.get_spec(basis)[1])
+   print(ACEfrictionCore.get_spec(basis)[1])
 end
 ##
 
 @info("Test equivariance properties for complex version")
 
 
-# The following test fails for ACE.AntiSymmetricEuclideanMatrix:
-# More precisely, if symmetry = :antisymmetric evaluation of ACE.get_spec(basis) will throw an error
+# The following test fails for ACEfrictionCore.AntiSymmetricEuclideanMatrix:
+# More precisely, if symmetry = :antisymmetric evaluation of ACEfrictionCore.get_spec(basis) will throw an error
 
 for symmetry in [:general, :symmetric] 
     if symmetry == :general
-       φ = ACE.EuclideanMatrix(Float64)
+       φ = ACEfrictionCore.EuclideanMatrix(Float64)
     elseif symmetry == :symmetric 
-       φ = ACE.SymmetricEuclideanMatrix(Float64)
+       φ = ACEfrictionCore.SymmetricEuclideanMatrix(Float64)
     else 
-       φ = ACE.AntiSymmetricEuclideanMatrix(Float64)
+       φ = ACEfrictionCore.AntiSymmetricEuclideanMatrix(Float64)
     end
     println(φ)
     pibasis = PIBasis(B1p, Bsel; property = φ)
@@ -182,7 +182,7 @@ for symmetry in [:general, :symmetric]
     local Xs, BB
     Xs = [ _randX() for _=1:nX ]
     BB = evaluate(basis, ACEConfig(Xs))
-    Q = rand([-1,1]) * ACE.Random.rand_rot()
+    Q = rand([-1,1]) * ACEfrictionCore.Random.rand_rot()
     Xs_rot = Ref(Q) .* shuffle(Xs)
     BB_rot = evaluate(basis, ACEConfig(Xs_rot))
     print_tf(@test all([ norm(Q' * b1 * Q - b2) < tol
@@ -247,14 +247,14 @@ for symmetry in [:general, :symmetric]
         BB = evaluate(basis, ACEConfig(Xs))
         for (i,b) in enumerate(BB)
            if norm(imag(b.val)) > imtol
-              @warn( "Large imaginary part for $(ACE.get_spec(basis)[i]), $(norm(imag(b.val)))")
+              @warn( "Large imaginary part for $(ACEfrictionCore.get_spec(basis)[i]), $(norm(imag(b.val)))")
            end
         end
         #println(maximum([ norm(imag(b.val))/ norm(real(b.val))  for b in BBs  ]))
         #print_tf(@test all([ norm(imag(b.val)) < .1  for b in BB  ]))
      end
      println()
-     print(ACE.get_spec(basis)[1])
+     print(ACEfrictionCore.get_spec(basis)[1])
 end
 # @info("check for rotation, permutation and inversion equivariance")
 # for ntest = 1:30
@@ -265,7 +265,7 @@ end
 #       Xs = [ _randX() for _=1:nX ] 
 #    end
 #    BB = evaluate(basis, ACEConfig(Xs))
-#    Q = rand([-1,1]) * ACE.Random.rand_rot()
+#    Q = rand([-1,1]) * ACEfrictionCore.Random.rand_rot()
 #    Xs_rot = Ref(Q) .* shuffle(Xs)
 #    BB_rot = evaluate(basis, ACEConfig(Xs_rot))
 #    print_tf(@test all([ norm(Q' * b1 * Q - b2) < tol
@@ -275,7 +275,7 @@ end
 
 # ## keep for further profiling
 #
-# φ = ACE.EuclideanVector(Complex{Float64})
+# φ = ACEfrictionCore.EuclideanVector(Complex{Float64})
 # pibasis = PIBasis(B1p, ord, maxdeg; property = φ, isreal = false)
 # basis = SymmetricBasis(pibasis, φ)
 # @time SymmetricBasis(pibasis, φ);
@@ -288,14 +288,14 @@ end
 
 #=
 @info(" ... derivatives")
-_rrval(x::ACE.XState) = x.rr
+_rrval(x::ACEfrictionCore.XState) = x.rr
 for ntest = 1:30
    Us = randn(SVector{3,Float64 }, length(Xs))
    C = randn(typeof(φ.val), length(basis))
    F = t -> sum( sum(c .* b.val)
-                 for (c, b) in zip(C, ACE.evaluate(basis, ACEConfig(Xs + t[1] * Us))) )
+                 for (c, b) in zip(C, ACEfrictionCore.evaluate(basis, ACEConfig(Xs + t[1] * Us))) )
    dF = t -> [ sum( sum(c .* db)
-                    for (c, db) in zip(C, _rrval.(ACE.evaluate_d(basis, ACEConfig(Xs + t[1] * Us))) * Us) ) ]
+                    for (c, db) in zip(C, _rrval.(ACEfrictionCore.evaluate_d(basis, ACEConfig(Xs + t[1] * Us))) * Us) ) ]
    print_tf(@test fdtest(F, dF, [0.0], verbose=false))
 end
 println()

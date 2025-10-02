@@ -19,9 +19,9 @@ end
 
 # ----------- FIO 
 
-write_dict(ev::ProductEvaluator) = Dict( "__id__" => "ACE_ProductEvaluator" )
+write_dict(ev::ProductEvaluator) = Dict( "__id__" => "ACEfrictionCore_ProductEvaluator" )
 
-read_dict(::Val{:ACE_ProductEvaluator}, D::Dict, basis, c) = ProductEvaluator(basis, c)
+read_dict(::Val{:ACEfrictionCore_ProductEvaluator}, D::Dict, basis, c) = ProductEvaluator(basis, c)
 
 # ------------------------------------------------------------
 #   Initialisation and Parameter manipulation code
@@ -78,8 +78,8 @@ import Base: *
 *(::_One, x::AbstractProperty) = x
 *(x::StaticArray, ::_One) = x
 *(::_One, x::StaticArray) = x
-*(::ACE._One, x::ACE.XState) = x
-*(x::ACE.XState, ::ACE._One) = x
+*(::ACEfrictionCore._One, x::ACEfrictionCore.XState) = x
+*(x::ACEfrictionCore.XState, ::ACEfrictionCore._One) = x
 
 _acquire_ctilde(basis::SymmetricBasis, len_AA, c::AbstractVector{<: Number}) = 
       zeros(promote_type(eltype(basis.A2Bmap), eltype(c)), len_AA)
@@ -156,7 +156,7 @@ end
 # #We generate a list of size "nprop" and keep the same objects as for a single property 
 # #inside the list.
 # function adjoint_EVAL_D(m::LinearACEModel, V::ProductEvaluator, cfg, wt::Matrix)
-#    _contract = ACE.contract 
+#    _contract = ACEfrictionCore.contract 
    
 #    basis1p = V.pibasis.basis1p
 #    dAAdA = zero(MVector{10, ComplexF64})   # TODO: VERY RISKY -> FIX THIS 

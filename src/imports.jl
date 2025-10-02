@@ -3,9 +3,9 @@ using ACEbase: @def
 
 @def aceimports begin
 
-   import ACE
+   import ACEfrictionCore
 
-   import ACE:   PIBasis,
+   import ACEfrictionCore:   PIBasis,
                  get_spec,
                  degree,
                  gensparse,

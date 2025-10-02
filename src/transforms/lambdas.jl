@@ -2,7 +2,7 @@
 # import ForwardDiff
 import LegibleLambdas
 import LegibleLambdas: LegibleLambda
-import ACE: read_dict, write_dict 
+import ACEfrictionCore: read_dict, write_dict 
 
 export λ, lambda 
 
@@ -27,11 +27,11 @@ evaluate(t::Lambda, x) = t.ll.λ(x)
 
 
 write_dict(t::Lambda)  = Dict(
-         "__id__" => "ACE_Lambda", 
+         "__id__" => "ACEfrictionCore_Lambda", 
          "exstr" => t.exstr
       )
 
-read_dict(::Val{:ACE_Lambda}, D::Dict) = λ(D["exstr"])
+read_dict(::Val{:ACEfrictionCore_Lambda}, D::Dict) = λ(D["exstr"])
 
 import Base: ==
 

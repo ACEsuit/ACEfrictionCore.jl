@@ -55,11 +55,11 @@ end
         B1.indices == B2.indices )
 
 write_dict(B::Product1pBasis) = 
-      Dict("__id__" => "ACE_Product1pBasis", 
+      Dict("__id__" => "ACEfrictionCore_Product1pBasis", 
             "bases" => write_dict.(B.bases), 
           "indices" => B.indices )
 
-function read_dict(::Val{:ACE_Product1pBasis}, D::Dict)
+function read_dict(::Val{:ACEfrictionCore_Product1pBasis}, D::Dict)
    bases = tuple( read_dict.(D["bases"])... )
    indices = [ tuple(v...) for v in D["indices"] ]
    return Product1pBasis(bases, indices)   
@@ -339,6 +339,6 @@ using NamedTupleTools: select
 #       w::AbstractVector{<: Number})
 # x = _val(X, basis)
 # a = _rrule_evaluate(basis.P, x, w)
-# TDX = ACE.dstate_type(a, X)
+# TDX = ACEfrictionCore.dstate_type(a, X)
 # return TDX( NamedTuple{(_varsym(basis),)}( (a,) ) )
 # end

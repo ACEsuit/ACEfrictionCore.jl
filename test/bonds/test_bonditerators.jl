@@ -1,9 +1,9 @@
 # very rudimentary test to see check whether BondsIterator and FilteredBondsIterator return the same environments.
 using JuLIP
-using ACE.ACEbonds
-using ACE
-using ACE.ACEbonds.BondCutoffs: EllipsoidCutoff, env_transform
-using ACE.ACEbonds: bonds
+using ACEfrictionCore.ACEbonds
+using ACEfrictionCore
+using ACEfrictionCore.ACEbonds.BondCutoffs: EllipsoidCutoff, env_transform
+using ACEfrictionCore.ACEbonds: bonds
 using ACEbase.Testing
 using Test
 r0cut = 3.2
@@ -17,26 +17,26 @@ maxdeg = 5
 maxorder = 3
 
 
-Bsel = ACE.SparseBasis(; maxorder=maxorder, p = 2, default_maxdeg = maxdeg ) 
+Bsel = ACEfrictionCore.SparseBasis(; maxorder=maxorder, p = 2, default_maxdeg = maxdeg ) 
 
 
-basis = SymmetricEllipsoidBondBasis(ACE.Invariant(), Bsel; species=[:Si] );
+basis = SymmetricEllipsoidBondBasis(ACEfrictionCore.Invariant(), Bsel; species=[:Si] );
 
 
 
-model = ACE.LinearACEModel(basis)
-θ = ACE.params(model)
+model = ACEfrictionCore.LinearACEModel(basis)
+θ = ACEfrictionCore.params(model)
 θ = randn(length(θ)) ./ (1:length(θ)).^2
-ACE.set_params!(model, θ)
+ACEfrictionCore.set_params!(model, θ)
 
-using ACE.ACEbonds: ACEBondPotentialBasis, ACEBondPotential
+using ACEfrictionCore.ACEbonds: ACEBondPotentialBasis, ACEBondPotential
 
 zSi = AtomicNumber(:Si)
 _bases = Dict((zSi, zSi) => basis)
 _models = Dict((zSi, zSi) => model)
 inds = Dict((zSi, zSi) => 1:length(basis))
 pot = ACEBondPotential(_models, cutoff)
-potbasis = ACE.ACEbonds.basis(pot)
+potbasis = ACEfrictionCore.ACEbonds.basis(pot)
 
 
 at = rattle!(set_pbc!(bulk(:Si, cubic=true) * (2, 2, 1), false), 0.2)
@@ -48,12 +48,12 @@ for (i, j, rrij, Js, Rs, Zs) in bonds(at, potbasis)
     global E1, E1t
     local env
     # find the right ace model 
-    ace = ACE.ACEbonds._get_model(potbasis, at.Z[i], at.Z[j])
+    ace = ACEfrictionCore.ACEbonds._get_model(potbasis, at.Z[i], at.Z[j])
     # transform the euclidean to cylindrical coordinates
     #env = eucl2cyl(rrij, at.Z[i], at.Z[j], Rs, Zs)
     env = env_transform(rrij, at.Z[i], at.Z[j], Rs, Zs, potbasis.cutoff)
     # evaluate 
-    ACE.evaluate!(E1t, ace, ACE.ACEConfig(env))
+    ACEfrictionCore.evaluate!(E1t, ace, ACEfrictionCore.ACEConfig(env))
     E1 += E1t 
 end
 
@@ -63,12 +63,12 @@ for (i, j, rrij, Js, Rs, Zs) in bonds(at, potbasis, Array(1:length(at)))
     global E2, E2t
     local env
     # find the right ace model 
-    ace = ACE.ACEbonds._get_model(potbasis, at.Z[i], at.Z[j])
+    ace = ACEfrictionCore.ACEbonds._get_model(potbasis, at.Z[i], at.Z[j])
     # transform the euclidean to cylindrical coordinates
     #env = eucl2cyl(rrij, at.Z[i], at.Z[j], Rs, Zs)
     env = env_transform(rrij, at.Z[i], at.Z[j], Rs, Zs, potbasis.cutoff)
     # evaluate 
-    ACE.evaluate!(E2t, ace, ACE.ACEConfig(env))
+    ACEfrictionCore.evaluate!(E2t, ace, ACEfrictionCore.ACEConfig(env))
     E2 += E2t 
 end
 

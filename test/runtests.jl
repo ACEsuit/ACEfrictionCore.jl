@@ -1,9 +1,9 @@
 
 
-using ACE, Test, Printf, LinearAlgebra, StaticArrays, BenchmarkTools
+using ACEfrictionCore, Test, Printf, LinearAlgebra, StaticArrays, BenchmarkTools
 
 ##
-@testset "ACE.jl" begin
+@testset "ACEfrictionCore.jl" begin
     # --------------------------------------------
     #   basic polynomial basis building blocks
     @testset "Ylm" begin include("polynomials/test_ylm.jl") end

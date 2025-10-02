@@ -1,10 +1,10 @@
 using JuLIP, StaticArrays, LinearAlgebra
-import ACE: State, filter 
+import ACEfrictionCore: State, filter 
 using JuLIP.Potentials: neigsz
 using JuLIP: Atoms
-# using ACE: BondEnvelope, filter, State, CylindricalBondEnvelope
-import ACE.ACEbonds.BondCutoffs: env_cutoff
-import ACE.ACEbonds.BondCutoffs: AbstractBondCutoff, env_filter, EllipsoidCutoff
+# using ACEfrictionCore: BondEnvelope, filter, State, CylindricalBondEnvelope
+import ACEfrictionCore.ACEbonds.BondCutoffs: env_cutoff
+import ACEfrictionCore.ACEbonds.BondCutoffs: AbstractBondCutoff, env_filter, EllipsoidCutoff
 
 _msort(z1,z2) = (z1<=z2 ? (z1,z2) : (z2,z1)) #TODO: this is hack. Need to either not use it here or define it once across all packages.
 #env_cutoff(cutoff::EllipsoidCutoff) = max(cutoff.rcutbond*.5 + cutoff.zcutenv, sqrt((cutoff.rcutbond*.5)^2+ cutoff.rcutenv^2))
@@ -126,7 +126,7 @@ function _get_bond_env(iter::BondsIterator, i, j, rrij)
 end
 
 
-# using ACE: BondEnvelope, filter, State, CylindricalBondEnvelope
+# using ACEfrictionCore: BondEnvelope, filter, State, CylindricalBondEnvelope
 
 # TODO: make this type-stable
 

@@ -1,8 +1,8 @@
-using ACE.ACEbonds, ACE, ACEbase, Test, StaticArrays, LinearAlgebra
-using ACE.ACEbase.Testing
-using ACE.ACEbonds.BondEnvelopes: CylindricalBondEnvelope, EllipsoidBondEnvelope
-using ACE: State
-using ACE.Random: rand_rot, rand_refl
+using ACEfrictionCore.ACEbonds, ACEfrictionCore, ACEbase, Test, StaticArrays, LinearAlgebra
+using ACEfrictionCore.ACEbase.Testing
+using ACEfrictionCore.ACEbonds.BondEnvelopes: CylindricalBondEnvelope, EllipsoidBondEnvelope
+using ACEfrictionCore: State
+using ACEfrictionCore.Random: rand_rot, rand_refl
 
 ##
 
@@ -42,7 +42,7 @@ for i = 1:30
 
     zeff = env.zcut + norm(r_centre)
     val = ((r/env.rcut)^2 - 1)^env.pr * ( (z/zeff)^2 - 1 )^env.pz * filt
-    print_tf(@test( ACE._inner_evaluate(env, X) ≈ val ))
+    print_tf(@test( ACEfrictionCore._inner_evaluate(env, X) ≈ val ))
 end
 println()
 
@@ -93,9 +93,9 @@ for lambda = [0,.5,.6,1]
 
             val = ( (z/zeff)^2 +  (r/env.rcut)^2 - 1.0)^env.pr * filt
             #@show val
-            #@show ACE._inner_evaluate(env, X)
+            #@show ACEfrictionCore._inner_evaluate(env, X)
             #print("------------------- \n")
-            print_tf(@test( ACE._inner_evaluate(env, X) ≈ val ))
+            print_tf(@test( ACEfrictionCore._inner_evaluate(env, X) ≈ val ))
         end
         println()
     end

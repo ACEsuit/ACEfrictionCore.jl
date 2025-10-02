@@ -1,6 +1,6 @@
 using StaticArrays
-import ACE 
-import ACE: evaluate, 
+import ACEfrictionCore 
+import ACEfrictionCore: evaluate, 
             write_dict, read_dict, 
             DState
             # frule_evaluate! 
@@ -17,7 +17,7 @@ using LinearAlgebra: I, norm
 abstract type StateTransform end 
 abstract type StaticGet <: StateTransform end 
 
-ACE.evaluate(fval::StaticGet, X) = getval(X, fval)
+ACEfrictionCore.evaluate(fval::StaticGet, X) = getval(X, fval)
 
 valtype(fval::StaticGet, X) = typeof(evaluate(fval, X))
 
@@ -52,10 +52,10 @@ end
 get_symbols(::GetNorm{VSYM}) where {VSYM} = (VSYM,)
 
 
-write_dict(fval::StaticGet) = Dict("__id__" => "ACE_StaticGet", 
+write_dict(fval::StaticGet) = Dict("__id__" => "ACEfrictionCore_StaticGet", 
                                    "expr" => string(typeof(fval)) )
 
-read_dict(::Val{:ACE_StaticGet}, D::Dict) = eval( Meta.parse(D["expr"]) )()
+read_dict(::Val{:ACEfrictionCore_StaticGet}, D::Dict) = eval( Meta.parse(D["expr"]) )()
 
 
 # rrule_evaluate! function removed - derivative functionality has been removed

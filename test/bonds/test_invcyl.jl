@@ -1,15 +1,15 @@
 
-using ACE.ACEbonds, ACE, ACEbase, Test, StaticArrays, LinearAlgebra, JuLIP
+using ACEfrictionCore.ACEbonds, ACEfrictionCore, ACEbase, Test, StaticArrays, LinearAlgebra, JuLIP
 using ACEbase.Testing
-using ACE.ACEbonds.BondEnvelopes: CylindricalBondEnvelope
-using ACE.ACEbonds.BondSelectors: SparseCylindricalBondBasis
-using ACE: discrete_jacobi, Rn1pBasis, scal1pbasis, Scal1pBasis,
+using ACEfrictionCore.ACEbonds.BondEnvelopes: CylindricalBondEnvelope
+using ACEfrictionCore.ACEbonds.BondSelectors: SparseCylindricalBondBasis
+using ACEfrictionCore: discrete_jacobi, Rn1pBasis, scal1pbasis, Scal1pBasis,
            evaluate, # evaluate_d, 
            Trig1pBasis, λ, 
            Product1pBasis, Categorical1pBasis, SimpleSparseBasis, 
            SymmetricBasis, Invariant, PIBasis
 
-using ACE.ACEbonds.BondCutoffs: housholderreflection, eucl2cyl, rand_env, rrule_eucl2cyl
+using ACEfrictionCore.ACEbonds.BondCutoffs: housholderreflection, eucl2cyl, rand_env, rrule_eucl2cyl
 ## basics 
 
 @info("Test housholderreflection")
@@ -85,18 +85,18 @@ Bsel = SparseCylindricalBondBasis(; maxorder = 3,
                                   default_maxdeg = maxdeg, 
                                   weight = Dict{Symbol, Float64}(:m => 1.0, :n => 1.0, :k => 1.0, :l => 1.0), 
                                  )
-ACE.init1pspec!(B1p, Bsel)
+ACEfrictionCore.init1pspec!(B1p, Bsel)
 length(B1p)
 
 ##
 
 # basis = PIBasis(B1p, Bsel; isreal=true)
-basis = SymmetricBasis(ACE.Invariant(), B1p, ACE.NoSym(), Bsel; isreal=true)
+basis = SymmetricBasis(ACEfrictionCore.Invariant(), B1p, ACEfrictionCore.NoSym(), Bsel; isreal=true)
 @show length(basis)
 
-pot = ACE.LinearACEModel(basis)
-θ = randn(ACE.nparams(pot)) ./ (1:ACE.nparams(pot)).^2
-ACE.set_params!(pot, θ)
+pot = ACEfrictionCore.LinearACEModel(basis)
+θ = randn(ACEfrictionCore.nparams(pot)) ./ (1:ACEfrictionCore.nparams(pot)).^2
+ACEfrictionCore.set_params!(pot, θ)
 
 ##
 
@@ -106,7 +106,7 @@ Xenv = eucl2cyl(rr0, Zi, Zj, Rs, Zs)
 evaluate(B1p, Xenv)
 b = evaluate(basis, ACEConfig(Xenv))
 v = evaluate(pot, ACEConfig(Xenv))
-println_slim(@test (dot(ACE.val.(b), θ) ≈ v.val))
+println_slim(@test (dot(ACEfrictionCore.val.(b), θ) ≈ v.val))
 
 ##
 
@@ -116,7 +116,7 @@ for ntest = 1:30
    rr0, Zi, Zj, Rs, Zs, Xs = rand_env(r0cut, rcut, zcut)
    Xenv = eucl2cyl(rr0, Zi, Zj, Rs, Zs)
    B1 = evaluate(basis, ACEConfig(Xenv))
-   Q = ACE.Random.rand_rot()
+   Q = ACEfrictionCore.Random.rand_rot()
    rr0_Q = Q * rr0 
    Rs_Q = Ref(Q) .* Rs
    Xenv_Q = eucl2cyl(rr0_Q, Zi, Zj, Rs_Q, Zs)
@@ -130,15 +130,15 @@ println()
 # @info("Check derivatives of basis w.r.t. cylindrical coordinates")
 # B = evaluate(basis, ACEConfig(Xenv))
 # dB = evaluate_d(basis, ACEConfig(Xenv))
-# TDX = ACE.dstate_type(Xenv[1])
+# TDX = ACEfrictionCore.dstate_type(Xenv[1])
 
 # for ntest = 1:30
 #    U = [ randn(TDX) for _ = 1:length(Xenv) ]
 #    V = randn(length(B)) ./ (1:length(B))
 
-#    F = t -> dot(V, ACE.val.(evaluate(basis, ACEConfig(Xenv + t * U))))
+#    F = t -> dot(V, ACEfrictionCore.val.(evaluate(basis, ACEConfig(Xenv + t * U))))
 #    dF = t -> ( dB = evaluate_d(basis, ACEConfig(Xenv + t * U)); 
-#                ACE.contract(sum(V[i] * dB[i, :] for i = 1:length(V)), U) )
+#                ACEfrictionCore.contract(sum(V[i] * dB[i, :] for i = 1:length(V)), U) )
 #    F(0.0)
 #    dF(0.0)
 
@@ -158,12 +158,12 @@ println()
 #    V = randn(length(B)) ./ (1:length(B))
 
 #    julip2ace = t -> ACEConfig(eucl2cyl(rr0 + t * uu0, Zi, Zj, Rs + t * Us, Zs))
-#    F = t -> dot(V, ACE.val.(evaluate(basis, julip2ace(t))))
+#    F = t -> dot(V, ACEfrictionCore.val.(evaluate(basis, julip2ace(t))))
 
 #    dF = t -> begin
 #          dB = evaluate_d(basis, julip2ace(t))
 #          dB0, dBenv = rrule_eucl2cyl(rr0, Zi, Zj, Rs, Zs, dB)
-#          ACE.contract( sum(V[i] * dBenv[i, :] for i = 1:length(V)), Us) + 
+#          ACEfrictionCore.contract( sum(V[i] * dBenv[i, :] for i = 1:length(V)), Us) + 
 #                   dot( sum(V[i] * dB0[i] for i = 1:length(V)), uu0 )
 #       end
 
@@ -176,15 +176,15 @@ println()
 
 # @info("Check derivatives of a potential w.r.t. cylindrical coordinates")
 # v = evaluate(pot, ACEConfig(Xenv))
-# dv = ACE.grad_config(pot, ACEConfig(Xenv))
-# TDX = ACE.dstate_type(Xenv[1])
+# dv = ACEfrictionCore.grad_config(pot, ACEConfig(Xenv))
+# TDX = ACEfrictionCore.dstate_type(Xenv[1])
 
 # for ntest = 1:30
 #    U = [ randn(TDX) for _ = 1:length(Xenv) ]
 
 #    F = t -> evaluate(pot, ACEConfig(Xenv + t * U)).val
-#    dF = t -> ( dv = ACE.grad_config(pot, ACEConfig(Xenv + t * U)); 
-#                ACE.contract(dv, U) )
+#    dF = t -> ( dv = ACEfrictionCore.grad_config(pot, ACEConfig(Xenv + t * U)); 
+#                ACEfrictionCore.contract(dv, U) )
 #    F(0.0)
 #    dF(0.0)
 
@@ -206,9 +206,9 @@ println()
 #    F = t -> evaluate(pot, julip2ace(t)).val
 
 #    dF = t -> begin
-#          dv_cyl = ACE.grad_config(pot, julip2ace(t))
+#          dv_cyl = ACEfrictionCore.grad_config(pot, julip2ace(t))
 #          dv0, dvenv = rrule_eucl2cyl(rr0, Zi, Zj, Rs, Zs, dv_cyl)
-#          ACE.contract(dvenv, Us) + dot(dv0, uu0 )
+#          ACEfrictionCore.contract(dvenv, Us) + dot(dv0, uu0 )
 #       end
 
 #    print_tf(@test all(ACEbase.Testing.fdtest(F, dF, 0.0; verbose=false)) )

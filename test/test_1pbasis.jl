@@ -2,9 +2,9 @@
 
 ##
 
-using ACE
+using ACEfrictionCore
 using Printf, Test, LinearAlgebra, StaticArrays
-using ACE: evaluate, evaluate_d, evaluate_ed, 
+using ACEfrictionCore: evaluate, evaluate_d, evaluate_ed, 
       Rn1pBasis, Ylm1pBasis,
       PositionState, Product1pBasis, getlabel, get_spec, 
       State, DState, rand_vec3, rand_radial, rand_sphere, Scal1pBasis, 
@@ -30,9 +30,9 @@ Rn = Rn1pBasis(J, trans)
 Ylm = Ylm1pBasis(maxL)
 Pk = Scal1pBasis(:u, nothing, :k, J)
 A_nlm = Product1pBasis( (Rn, Ylm) )
-ACE.init1pspec!(A_nlm, Bsel)
+ACEfrictionCore.init1pspec!(A_nlm, Bsel)
 A_nlmk = Product1pBasis( (Rn, Ylm, Pk) )
-ACE.init1pspec!(A_nlmk, Bsel)
+ACEfrictionCore.init1pspec!(A_nlmk, Bsel)
 
 nX = 20
 Xs = [ State(rr = rand_vec3(Rn) ) for _=1:nX ]
@@ -84,8 +84,8 @@ end
 
 #    # TODO: this could be moved into ACE proper ... 
 #    z_contract(dx::DState, u::DState) = 
-#          sum( ACE.contract(getproperty(dx, sym), getproperty(u, sym))
-#               for sym in ACE._syms(dx) )
+#          sum( ACEfrictionCore.contract(getproperty(dx, sym), getproperty(u, sym))
+#               for sym in ACEfrictionCore._syms(dx) )
 
 #    for ntest = 1:30
 #       X = _randX() 
@@ -113,8 +113,8 @@ end
 #    local Xs, cfg, A1, nX
 #    nX = 5
 #    Xs = [ State(rr = rand_vec3(Rn), u = rand_radial(J) ) for _=1:nX ]
-#    A1 = ACE.evaluate(basis, Xs)
-#    A2, dA2 = ACE.evaluate_ed(basis, Xs)
+#    A1 = ACEfrictionCore.evaluate(basis, Xs)
+#    A2, dA2 = ACEfrictionCore.evaluate_ed(basis, Xs)
 #    println_slim(@test A1 ≈ A2)
 #    println_slim(@test( evaluate_d(basis, Xs) ≈ dA2 ))
 
@@ -128,7 +128,7 @@ end
 #       dF = t -> begin 
 #          dB = evaluate_d(basis, Xs + t * Us)
 #          c_dB = sum(c .* dB, dims=1)[:]
-#          ACE.contract(c_dB, Us)
+#          ACEfrictionCore.contract(c_dB, Us)
 #       end
 #       print_tf(@test fdtest(F, dF, 0.0; verbose=false))
 #    end

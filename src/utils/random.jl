@@ -5,7 +5,7 @@ module Random
 # TODO: rename rand_radial -> rand???
 
 import LinearAlgebra: norm
-import ACE: rand_radial, scaling, 
+import ACEfrictionCore: rand_radial, scaling, 
             PositionState, ACEBasis, 
             rand_sphere, rand_rot, rand_refl, rand_O3, 
             B1pComponent
@@ -68,7 +68,7 @@ end
 #    combine(basis, randcoeffs(basis; diff = diff))
 
 # # move to utility???
-# function rand(::Type{ACE.RPI.RPIBasis}; kwargs...)
+# function rand(::Type{ACEfrictionCore.RPI.RPIBasis}; kwargs...)
 #
 # end
 

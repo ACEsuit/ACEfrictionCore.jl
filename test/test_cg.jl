@@ -5,10 +5,10 @@
 
 #---
 
-using PyCall, Test, ACE, ACE.SphericalHarmonics, ACE.Testing, StaticArrays
-using ACE: evaluate
-using ACE.SphericalHarmonics: index_y
-using ACE.Rotations3D: ClebschGordan
+using PyCall, Test, ACEfrictionCore, ACEfrictionCore.SphericalHarmonics, ACEfrictionCore.Testing, StaticArrays
+using ACEfrictionCore: evaluate
+using ACEfrictionCore.SphericalHarmonics: index_y
+using ACEfrictionCore.Rotations3D: ClebschGordan
 
 #---
 

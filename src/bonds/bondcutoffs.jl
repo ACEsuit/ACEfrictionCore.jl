@@ -3,13 +3,13 @@ module BondCutoffs
 # export AbstractCutoff, EllipsoidCutoff, SphericalCutoff, DSphericalCutoff
 # export env_filter, env_transform, env_cutoff
 
-import ACE
-import ACE: State, DState
+import ACEfrictionCore
+import ACEfrictionCore: State, DState
 using JuLIP: AtomicNumber, chemical_symbol
 using StaticArrays
 using LinearAlgebra: norm, I
 
-import ACE: write_dict, read_dict
+import ACEfrictionCore: write_dict, read_dict
 
 export write_dict, read_dict, EllipsoidCutoff, CylindricalCutoff
 
@@ -125,7 +125,7 @@ env_transform(rrij::SVector, Zi, Zj,
 
 include("ellipsoid_trans.jl") # contains rrules for ellipsoid2sphere and other auxiliary functions
 
-function ACE.write_dict(cutoff::EllipsoidCutoff{T}) where {T}
+function ACEfrictionCore.write_dict(cutoff::EllipsoidCutoff{T}) where {T}
     Dict("__id__" => "ACEbonds_EllipsoidCutoff",
           "rcutbond" => cutoff.rcutbond,
           "rcutenv" => cutoff.rcutenv,
@@ -133,7 +133,7 @@ function ACE.write_dict(cutoff::EllipsoidCutoff{T}) where {T}
              "T" => T)         
 end 
 
-function ACE.read_dict(::Val{:ACEbonds_EllipsoidCutoff}, D::Dict)
+function ACEfrictionCore.read_dict(::Val{:ACEbonds_EllipsoidCutoff}, D::Dict)
     rcutbond = D["rcutbond"]
     rcutenv = D["rcutenv"]
     zcutenv = D["zcutenv"]

@@ -1,5 +1,5 @@
-import ACE.OrthPolys: OrthPolyBasis
-import ACE.Transforms: GetNorm
+import ACEfrictionCore.OrthPolys: OrthPolyBasis
+import ACEfrictionCore.Transforms: GetNorm
 
 # @doc raw"""
 # `Rn1pBasis`
@@ -20,8 +20,8 @@ function Rn1pBasis(  R::OrthPolyBasis, trans = nothing;
    degrees = collect(0:(length(R)-1))
    R1 = chain(λ("rr -> norm(rr)"), trans, R)
    Rn = B1pComponent(R1, GetVal{varsym}(), spec, degrees, label)
-   rl = ACE.inv_transform(r -> Base.invokelatest(trans, r), R.tl)
-   rr = ACE.inv_transform(r -> Base.invokelatest(trans, r), R.tr)
+   rl = ACEfrictionCore.inv_transform(r -> Base.invokelatest(trans, r), R.tl)
+   rr = ACEfrictionCore.inv_transform(r -> Base.invokelatest(trans, r), R.tr)
    rin, rcut = extrema([rl, rr])
    Rn.meta["rin"] = rin 
    Rn.meta["rcut"] = rcut 

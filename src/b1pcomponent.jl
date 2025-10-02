@@ -158,7 +158,7 @@ end
 
 function write_dict(basis::B1pComponent)
    ISYMS = _idxsyms(basis)
-   return Dict("__id__" => "ACE_B1pComponent", 
+   return Dict("__id__" => "ACEfrictionCore_B1pComponent", 
                  "syms" => [ string.(ISYMS) ...], 
                 "basis" => write_dict(basis.basis), 
                  "fval" => write_dict(basis.fval), 
@@ -168,7 +168,7 @@ function write_dict(basis::B1pComponent)
 end
 
 
-function read_dict(::Val{:ACE_B1pComponent}, D::Dict)
+function read_dict(::Val{:ACEfrictionCore_B1pComponent}, D::Dict)
    basis = read_dict(D["basis"])
    ISYMS = tuple(Symbol.(D["syms"])...)
    spec = NamedTuple{ISYMS}.(namedtuple.(D["spec"]))

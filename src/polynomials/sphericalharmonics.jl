@@ -5,15 +5,15 @@ module SphericalHarmonics
 
 using StaticArrays, LinearAlgebra
 
-import ACE, ACEbase, ACE.ACEbase024 
+import ACEfrictionCore, ACEbase, ACEfrictionCore.ACEbase024 
 
-import ACE: evaluate!,
+import ACEfrictionCore: evaluate!,
 			   write_dict, read_dict,
 				ACEBasis, 
 				acquire!, release!, 
 				evaluate 
 
-import ACE: VectorPool, ArrayCache 
+import ACEfrictionCore: VectorPool, ArrayCache 
 
 export SHBasis
 
@@ -245,7 +245,7 @@ _valtype(sh::SHBasis{T}, x::AbstractVector{S}) where {T, S} =
 _gradtype(sh::SHBasis{T}, x::AbstractVector{S})  where {T, S} = 
 			SVector{3, Complex{promote_type(T, S)}}
 
-function ACE.degree(sh::SHBasis, i::Integer)			
+function ACEfrictionCore.degree(sh::SHBasis, i::Integer)			
 	l, m = idx2lm(i)
 	return l 
 end
@@ -255,11 +255,11 @@ import Base.==
 		(B1.alp == B2.alp) && (typeof(B1) == typeof(B2))
 
 write_dict(SH::SHBasis{T}) where {T} =
-		Dict("__id__" => "ACE_SHBasis",
+		Dict("__id__" => "ACEfrictionCore_SHBasis",
 			  "T" => write_dict(T),
 			  "maxL" => maxL(SH))
 
-read_dict(::Val{:ACE_SHBasis}, D::Dict) =
+read_dict(::Val{:ACEfrictionCore_SHBasis}, D::Dict) =
 		SHBasis(D["maxL"], read_dict(D["T"]))
 
 
@@ -268,7 +268,7 @@ Base.length(S::AbstractSHBasis) = sizeY(maxL(S))
 
 # _evaluate_d! and _evaluate_ed! functions removed - derivative functionality has been removed
 
-function ACE.evaluate(SH::SHBasis, R::AbstractVector)
+function ACEfrictionCore.evaluate(SH::SHBasis, R::AbstractVector)
 	Y = acquire!(SH.B_pool, length(SH), _valtype(SH, R))
 	evaluate!(parent(Y), SH, R)
 	return Y 

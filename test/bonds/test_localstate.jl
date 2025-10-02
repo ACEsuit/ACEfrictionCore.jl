@@ -1,7 +1,7 @@
 
-using ACE, JuLIP, ACEbonds, LinearAlgebra
+using ACEfrictionCore, JuLIP, ACEbonds, LinearAlgebra
 using ACEbonds: bonds 
-using ACE: State 
+using ACEfrictionCore: State 
 
 ##
 
@@ -25,7 +25,7 @@ for (i1, j1, rr01, Js1, Rs1, Zs1) in bonds(at, rbcut, rbcut/2+zcut, env_filter)
    end
 end
 
-# now we can transform it to an ACE.jl compatible environment 
+# now we can transform it to an ACEfrictionCore.jl compatible environment 
 env = ACEbonds.eucl2cyl(rr0, at.Z[i], at.Z[j], Rs, Zs)
 
 

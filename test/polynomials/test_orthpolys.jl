@@ -5,11 +5,11 @@
 @info("--------- Testing OrthogonalPolynomials ----------")
 
 ##
-using ACE, Test #, ForwardDiff
+using ACEfrictionCore, Test #, ForwardDiff
 
 using LinearAlgebra: norm, cond
-using ACE.OrthPolys: OrthPolyBasis
-using ACE: evaluate, evaluate_ed 
+using ACEfrictionCore.OrthPolys: OrthPolyBasis
+using ACEfrictionCore: evaluate, evaluate_ed 
 using ACEbase.Testing: print_tf
 
 
@@ -23,7 +23,7 @@ for ntest = 1:10
    tdf = rand(1000)
    ww = 1.0 .+ rand(1000)
    Jd = OrthPolyBasis(N, 2, 1.0, 1, -1.0, tdf, ww)
-   print_tf(@test all(ACE.Testing.test_fio(Jd)))
+   print_tf(@test all(ACEfrictionCore.Testing.test_fio(Jd)))
 end
 println()
 
@@ -81,22 +81,22 @@ println()
 # @info("Testing the orthogonality (via A-basis)")
 #
 # spec = SparseSHIP(3, 10)
-# P = ACE.OrthPolys.transformed_jacobi(ACE.maxK(spec)+1, trans, 2.0, 0.5;
+# P = ACEfrictionCore.OrthPolys.transformed_jacobi(ACEfrictionCore.maxK(spec)+1, trans, 2.0, 0.5;
 #                                       pcut = 2, pin = 2)
 # aceB = SHIPBasis(spec, P)
 #
 # function evalA(aceB, tmp, Rs)
 #    Zs = zeros(Int16, length(Rs))
-#    ACE.precompute_A!(tmp, aceB, Rs, Zs, 1)
+#    ACEfrictionCore.precompute_A!(tmp, aceB, Rs, Zs, 1)
 #    return tmp.A[1]
 # end
 #
 # function A_gramian(aceB, Nsamples = 100_000)
-#    tmp = ACE.alloc_temp(aceB)
+#    tmp = ACEfrictionCore.alloc_temp(aceB)
 #    lenA = length(tmp.A[1])
 #    G = zeros(ComplexF64, lenA, lenA)
 #    for n = 1:Nsamples
-#       R = ACE.rand_vec(aceB.J)
+#       R = ACEfrictionCore.rand_vec(aceB.J)
 #       A = evalA(aceB, tmp, [R])
 #       for i = 1:lenA, j = 1:lenA
 #          G[i,j] +=  A[i] * A[j]'
@@ -114,7 +114,7 @@ println()
 # ## Quick look at the basis
 # using Plots
 # N = 5
-# Jd = ACE.OrthPolys.discrete_jacobi(N; pcut = 3, pin = 2)
+# Jd = ACEfrictionCore.OrthPolys.discrete_jacobi(N; pcut = 3, pin = 2)
 # tp = range(-1, 1, length=100)
 # Jp = zeros(length(tp), N)
 # for (i,t) in enumerate(tp)

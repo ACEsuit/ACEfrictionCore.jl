@@ -48,13 +48,13 @@ Base.length(basis::SymmetricBasis{PIB, PROP}) where {PIB, PROP} =
         (B1.real == B2.real) )
 
 write_dict(B::SymmetricBasis{PIB, PROP}) where {PIB, PROP} =
-      Dict( "__id__" => "ACE_SymmetricBasis",
+      Dict( "__id__" => "ACEfrictionCore_SymmetricBasis",
             "pibasis" => write_dict(B.pibasis),
             "A2Bmap" => write_dict(B.A2Bmap),
             "symgrp" => write_dict(B.symgrp), 
             "isreal" => (B.real == Base.real) )
 
-read_dict(::Val{:ACE_SymmetricBasis}, D::Dict) =
+read_dict(::Val{:ACEfrictionCore_SymmetricBasis}, D::Dict) =
       SymmetricBasis(read_dict(D["pibasis"]),
                      read_dict(D["A2Bmap"]),
                      read_dict(D["symgrp"]), 

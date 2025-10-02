@@ -233,22 +233,22 @@ end
 # FIO codes
 
 write_dict(basis::PIBasis) =
-   Dict(  "__id__" => "ACE_PIBasis",
+   Dict(  "__id__" => "ACEfrictionCore_PIBasis",
          "basis1p" => write_dict(basis.basis1p),
             "spec" => write_dict(basis.spec),
             "real" => basis.real == Base.real ? true : false )
 
-read_dict(::Val{:ACE_PIBasis}, D::Dict) =
+read_dict(::Val{:ACEfrictionCore_PIBasis}, D::Dict) =
    PIBasis( read_dict(D["basis1p"]),
             read_dict(D["spec"]),
             D["real"] ? Base.real : Base.identity )
 
 write_dict(spec::PIBasisSpec) =
-   Dict( "__id__" => "ACE_PIBasisSpec",
+   Dict( "__id__" => "ACEfrictionCore_PIBasisSpec",
          "orders" => spec.orders,
          "iAA2iA" => write_dict(spec.iAA2iA) )
 
-read_dict(::Val{:ACE_PIBasisSpec}, D::Dict) =
+read_dict(::Val{:ACEfrictionCore_PIBasisSpec}, D::Dict) =
    PIBasisSpec( D["orders"], read_dict(D["iAA2iA"]) )
 
 

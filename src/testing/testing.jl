@@ -3,12 +3,12 @@
 module Testing
 
 using Test
-import ACE
+import ACEfrictionCore
 
-ACE.@extimports
-ACE.@aceimports
+ACEfrictionCore.@extimports
+ACEfrictionCore.@aceimports
 
-import ACEbase, ACE.ACEbase024
+import ACEbase, ACEfrictionCore.ACEbase024
 import ACEbase.Testing: print_tf, test_fio
 
 export print_tf, test_fio, test_transform
@@ -22,11 +22,11 @@ export print_tf, test_fio, test_transform
 
 # # ---------- code for consistency tests
 #
-# test_basis(D::Dict) = ACE.Utils.rpi_basis(;
+# test_basis(D::Dict) = ACEfrictionCore.Utils.rpi_basis(;
 #                species = Symbol.(D["species"]), N = D["N"],
 #                maxdeg = D["maxdeg"],
 #                r0 = D["r0"], rcut = D["rcut"],
-#                D = ACE.RPI.SparsePSHDegree(wL = D["wL"]) )
+#                D = ACEfrictionCore.RPI.SparsePSHDegree(wL = D["wL"]) )
 #
 #
 # _evaltest(::Val{:E}, V, at) = energy(V, at)
@@ -35,7 +35,7 @@ export print_tf, test_fio, test_transform
 # function createtests(V, ntests; tests = ["E", "F"], kwargs...)
 #    testset = Dict[]
 #    for n = 1:ntests
-#       at = ACE.Random.rand_config(V; kwargs...)
+#       at = ACEfrictionCore.Random.rand_config(V; kwargs...)
 #       D = Dict("at" => write_dict(at), "tests" => Dict())
 #       for t in tests
 #          D["tests"][t] = _evaltest(Val(Symbol(t)), V, at)
@@ -61,7 +61,7 @@ export print_tf, test_fio, test_transform
 # ---------- code for transform tests
 
 # import ForwardDiff
-import ACE: evaluate, inv_transform
+import ACEfrictionCore: evaluate, inv_transform
 
 function test_transform(T, rrange, ntests = 100)
 

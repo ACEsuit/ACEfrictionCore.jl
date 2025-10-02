@@ -1,6 +1,6 @@
 
 
-import ACE.Transforms: GetVal
+import ACEfrictionCore.Transforms: GetVal
 
 @doc raw"""
 `Trig1pBasis`

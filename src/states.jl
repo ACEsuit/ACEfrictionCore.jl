@@ -87,8 +87,8 @@ _showsym(X::State) = ""
 _showsym(X::DState) = "′"
 
 function show(io::IO, X::XState)
-   _str(sym) = "$(sym):$(ACE._2str(getproperty(ACE._x(X), sym)))"
-   strs = [ _str(sym) for sym in keys(ACE._x(X)) ]
+   _str(sym) = "$(sym):$(ACEfrictionCore._2str(getproperty(ACEfrictionCore._x(X), sym)))"
+   strs = [ _str(sym) for sym in keys(ACEfrictionCore._x(X)) ]
    str = prod(strs[i] * ", " for i = 1:length(strs)-1; init="") * strs[end] 
    # str = prod( "$(sym):$(_2str(getproperty(_x(X), sym))), " 
    #             for sym in keys(_x(X)) )
@@ -296,12 +296,12 @@ import Base: +, -
 for f in (:+, :-, )
    eval( quote 
       function $f(X1::TX1, X2::TX2) where {TX1 <: XState, TX2 <: XState}
-         SYMS1 = ACE._syms(TX1)
-         @assert issubset(ACE._syms(TX2), SYMS1)
+         SYMS1 = ACEfrictionCore._syms(TX1)
+         @assert issubset(ACEfrictionCore._syms(TX2), SYMS1)
          vals = ntuple( i -> begin 
                   sym = SYMS1[i]
-                  v1 = getproperty(ACE._x(X1), sym)
-                  haskey(ACE._x(X2), sym) ? $f(v1, getproperty(ACE._x(X2), sym)) : v1
+                  v1 = getproperty(ACEfrictionCore._x(X1), sym)
+                  haskey(ACEfrictionCore._x(X2), sym) ? $f(v1, getproperty(ACEfrictionCore._x(X2), sym)) : v1
                end, length(SYMS1))
          return TX1( NamedTuple{SYMS1}(vals) )
       end
@@ -412,7 +412,7 @@ promote_rule(::Union{Type{S}, Type{PositionState{S}}},
 # ------------------ Basic Configurations Code 
 # TODO: get rid of this?  
 
-import ACE.ACEbase024: AbstractConfiguration
+import ACEfrictionCore.ACEbase024: AbstractConfiguration
 export ACEConfig 
 
 """

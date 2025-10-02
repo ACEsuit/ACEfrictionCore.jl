@@ -5,9 +5,9 @@ module OrthPolys
 using SparseArrays
 using LinearAlgebra: dot
 
-import ACE
+import ACEfrictionCore
 
-import ACE: evaluate!, 
+import ACEfrictionCore: evaluate!, 
             evaluate, 
             # frule_evaluate, 
             read_dict, write_dict,
@@ -116,7 +116,7 @@ Base.show(io::IO, P::OrthPolyBasis) =
 
 
 write_dict(J::OrthPolyBasis{T}) where {T} = Dict(
-      "__id__" => "ACE_OrthPolyBasis",
+      "__id__" => "ACEfrictionCore_OrthPolyBasis",
       "T" => write_dict(T),
       "pr" => J.pr,
       "tr" => J.tr,
@@ -136,12 +136,12 @@ OrthPolyBasis(D::Dict, T=read_dict(D["T"])) =
       T.(D["tdf"]), T.(D["ww"])
    )
 
-read_dict(::Val{:ACE_OrthPolyBasis}, D::Dict) = OrthPolyBasis(D)
+read_dict(::Val{:ACEfrictionCore_OrthPolyBasis}, D::Dict) = OrthPolyBasis(D)
 
 # rand applied to a J will return a random transformed distance drawn from
 # the measure w.r.t. which the polynomials were constructed.
 # TODO: allow non-constant weights!
-function ACE.rand_radial(J::OrthPolyBasis)
+function ACEfrictionCore.rand_radial(J::OrthPolyBasis)
    @assert maximum(abs, diff(J.ww)) == 0
    return rand(J.tdf)
 end

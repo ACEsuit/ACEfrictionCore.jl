@@ -2,9 +2,9 @@
 
 module Utils
 
-import ACE
+import ACEfrictionCore
 
-import ACE: polytransform, discrete_jacobi, Rn1pBasis,
+import ACEfrictionCore: polytransform, discrete_jacobi, Rn1pBasis,
             init1pspec!, Ylm1pBasis,
             Product1pBasis, SimpleSparseBasis
 
@@ -49,14 +49,14 @@ end
 
 @doc raw"""
 Construct a ``R_n * Y_l^m`` 1-particle basis.
-All arguments are keyword arguments; see documentation of `ACE.Utils.Rn_basis`.
+All arguments are keyword arguments; see documentation of `ACEfrictionCore.Utils.Rn_basis`.
 """
 function RnYlm_1pbasis(; maxdeg=6, maxL = maxdeg, varsym = :rr, idxsyms = (:n, :l, :m), 
                          Bsel = nothing, kwargs...)
    Rn = Rn_basis(; maxdeg = maxdeg, varsym = varsym, nsym = idxsyms[1],
                    kwargs...)
    Ylm = Ylm1pBasis(maxL, varsym = varsym, lsym = idxsyms[2], msym = idxsyms[3])
-   B1p = ACE.Product1pBasis((Rn, Ylm))
+   B1p = ACEfrictionCore.Product1pBasis((Rn, Ylm))
    if Bsel != nothing 
       init1pspec!(B1p, Bsel)
    end

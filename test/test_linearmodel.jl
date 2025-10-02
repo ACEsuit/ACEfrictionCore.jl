@@ -4,9 +4,9 @@
 ##
 
 
-using ACE, ACEbase, ACE.ACEbase024, StaticArrays
-using Printf, Test, LinearAlgebra, ACE.Testing, Random
-using ACE: evaluate, SymmetricBasis, PIBasis, 
+using ACEfrictionCore, ACEbase, ACEfrictionCore.ACEbase024, StaticArrays
+using Printf, Test, LinearAlgebra, ACEfrictionCore.Testing, Random
+using ACEfrictionCore: evaluate, SymmetricBasis, PIBasis, 
            O3, rand_vec3
            # grad_config, grad_params removed - derivative functionality has been removed
 using ACEbase.Testing: fdtest, println_slim 
@@ -24,19 +24,19 @@ maxdeg = 6
 ord = 3
 Bsel = SimpleSparseBasis(ord, maxdeg) 
 
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
 
 # generate a configuration
 cfg = randconfig(B1p, 10)
 Xs = cfg.Xs
 
-φ = ACE.Invariant()
+φ = ACEfrictionCore.Invariant()
 basis = SymmetricBasis(φ, B1p, O3(), Bsel)
 
 BB = evaluate(basis, cfg)
 c = rand(length(BB)) .- 0.5
-naive = ACE.LinearACEModel(basis, c, evaluator = :naive)
-standard = ACE.LinearACEModel(basis, c, evaluator = :standard)
+naive = ACEfrictionCore.LinearACEModel(basis, c, evaluator = :naive)
+standard = ACEfrictionCore.LinearACEModel(basis, c, evaluator = :standard)
 
 ## FIO 
 
@@ -58,21 +58,21 @@ evaluate_ref(basis, cfg, c) ≈ evaluate(naive, cfg)
 # grad_params(naive, cfg) ≈ grad_params(standard, cfg)
 # grad_config(naive, cfg) ≈ grad_config(standard, cfg)
 
-# (fun, funref, str) = (ACE.grad_params_config, grad_params_config_ref, "grad_params_config")
+# (fun, funref, str) = (ACEfrictionCore.grad_params_config, grad_params_config_ref, "grad_params_config")
 
 for (fun, funref, str) in [ 
          (evaluate, evaluate_ref, "evaluate"), 
-         # (ACE.grad_config, grad_config_ref, "grad_config"), 
-         # (ACE.grad_params, grad_params_ref, "grad_params"), 
-         # (ACE.grad_params_config, grad_params_config_ref, "grad_params_config"), 
+         # (ACEfrictionCore.grad_config, grad_config_ref, "grad_config"), 
+         # (ACEfrictionCore.grad_params, grad_params_ref, "grad_params"), 
+         # (ACEfrictionCore.grad_params_config, grad_params_config_ref, "grad_params_config"), 
       ]
    @info("Testing `$str` for different model evaluators")
    for ntest = 1:30
       local c, cfg
       cfg = randconfig(B1p, 10)
       c = rand(length(basis)) .- 0.5 
-      ACE.set_params!(naive, c)
-      ACE.set_params!(standard, c)
+      ACEfrictionCore.set_params!(naive, c)
+      ACEfrictionCore.set_params!(standard, c)
       val = funref(basis, cfg, c)
       val_naive = fun(naive, cfg)
       val_standard = fun(standard, cfg)
@@ -98,8 +98,8 @@ println()
 @info("Test a Linear Model with EuclideanVector output")
 maxdeg = 6; ord = 3
 Bsel = SimpleSparseBasis(ord, maxdeg) 
-B1p = ACE.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
-φ = ACE.EuclideanVector{Float64}()
+B1p = ACEfrictionCore.Utils.RnYlm_1pbasis(; maxdeg=maxdeg)
+φ = ACEfrictionCore.EuclideanVector{Float64}()
 basis = SymmetricBasis(φ, B1p, O3(), Bsel; isreal=true)
 
 ##
@@ -110,7 +110,7 @@ for ntest = 1:30
    cfg = randconfig(B1p, 10)
    BB = evaluate(basis, cfg)
    c = randn(length(BB)) ./ (1:length(BB)).^2
-   model = ACE.LinearACEModel(basis, c, evaluator = :standard)
+   model = ACEfrictionCore.LinearACEModel(basis, c, evaluator = :standard)
    val1 = sum(c .* BB) 
    val2 = evaluate(model, cfg)
    print_tf(@test( val1 ≈ val2 ))
@@ -122,7 +122,7 @@ println()
 
 # BB = evaluate(basis, cfg)
 # c = randn(length(BB)) ./ (1:length(BB)).^2
-# model = ACE.LinearACEModel(basis, c, evaluator = :standard)
+# model = ACEfrictionCore.LinearACEModel(basis, c, evaluator = :standard)
 
 # cfg = randconfig(B1p, 10)
 # evaluate(model, cfg)

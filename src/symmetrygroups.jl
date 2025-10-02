@@ -27,11 +27,11 @@ struct NoSym <: SymmetryGroup
 end 
 
 # write_dict(G::O3) = 
-#       Dict("__id__" => "ACE_O3", 
+#       Dict("__id__" => "ACEfrictionCore_O3", 
 #            "lsym" => lsym(G), 
 #            "msym" => msym(G) )
 
-# read_dict(::Val{:ACE_O3}, D::Dict) = 
+# read_dict(::Val{:ACEfrictionCore_O3}, D::Dict) = 
 #       O3(Symbol(D["lsym"]), Symbol(D["msym"]))
 
 
@@ -80,11 +80,11 @@ getm(G::O3, b::NamedTuple) = b[msym(G)]
 
 
 write_dict(G::O3) = 
-      Dict("__id__" => "ACE_O3", 
+      Dict("__id__" => "ACEfrictionCore_O3", 
            "lsym" => lsym(G), 
            "msym" => msym(G) )
 
-read_dict(::Val{:ACE_O3}, D::Dict) = 
+read_dict(::Val{:ACEfrictionCore_O3}, D::Dict) = 
       O3(Symbol(D["lsym"]), Symbol(D["msym"]))
 
 
@@ -232,11 +232,11 @@ end
 export ⊗
 
 write_dict(G::O3O3) = 
-      Dict("__id__" => "ACE_O3O3", 
+      Dict("__id__" => "ACEfrictionCore_O3O3", 
            "G1" => write_dict(G.G1), 
            "G2" => write_dict(G.G2) )
 
-read_dict(::Val{:ACE_O3O3}, D::Dict) = 
+read_dict(::Val{:ACEfrictionCore_O3O3}, D::Dict) = 
       read_dict(D["G1"]) ⊗ read_dict(D["G2"])
 
 

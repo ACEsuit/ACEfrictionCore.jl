@@ -1,30 +1,30 @@
 
 
-using ACE, StaticArrays, BenchmarkTools, Test, LinearAlgebra
-using ACE.Testing 
+using ACEfrictionCore, StaticArrays, BenchmarkTools, Test, LinearAlgebra
+using ACEfrictionCore.Testing 
 
-using ACE: State, DState
+using ACEfrictionCore: State, DState
 
 ##
 
 X = State( rr = randn(SVector{3, Float64}) )
 
-SYMS = ACE._syms(X)
+SYMS = ACEfrictionCore._syms(X)
 println(@test SYMS == (:rr,))
 
-TT = ACE._tt(X)
+TT = ACEfrictionCore._tt(X)
 println(@test( TT == Tuple{SVector{3, Float64}} ))
 
-TDX = ACE.dstate_type(X)
+TDX = ACEfrictionCore.dstate_type(X)
 println(@test TDX == DState{NamedTuple{(:rr,), Tuple{SVector{3, Float64}}}})
 
 
 dX = DState(X)
-println(@test typeof(dX) == ACE.dstate_type(X))
+println(@test typeof(dX) == ACEfrictionCore.dstate_type(X))
 println(@test dX.rr == X.rr)
 
 
-cTDX = ACE.dstate_type(0.0im, X)
+cTDX = ACEfrictionCore.dstate_type(0.0im, X)
 println(@test cTDX == DState{NamedTuple{(:rr,), Tuple{SVector{3, ComplexF64}}}})
 
 cdX = complex(dX)
@@ -56,14 +56,14 @@ println(@test( dot(dX, cdX) == dot(dX.rr, cdX.rr) ))
 println(@test( dot(cdX, dX) == dot(cdX.rr, dX.rr) ))
 
 dX1, dX2 = randn(cdX), randn(cdX)
-println(@test ACE.contract(dX1, dX2) == sum(dX1.rr .* dX2.rr) )
-println(@test ACE.contract(dX1, dX2) != dot(dX1, dX2) )
+println(@test ACEfrictionCore.contract(dX1, dX2) == sum(dX1.rr .* dX2.rr) )
+println(@test ACEfrictionCore.contract(dX1, dX2) != dot(dX1, dX2) )
 
 println(@test isapprox(dX, cdX))
 
 println(@test norm(dX) == norm(dX.rr) )
-println(@test ACE.sumsq(dX) == ACE.sumsq(dX.rr) )
-println(@test ACE.normsq(dX) == ACE.normsq(dX.rr) )
+println(@test ACEfrictionCore.sumsq(dX) == ACEfrictionCore.sumsq(dX.rr) )
+println(@test ACEfrictionCore.normsq(dX) == ACEfrictionCore.normsq(dX.rr) )
 
 ##
 

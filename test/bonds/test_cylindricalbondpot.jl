@@ -1,13 +1,13 @@
-using ACE.ACEbonds, ACE, ACEbase, Test, StaticArrays, LinearAlgebra, JuLIP
+using ACEfrictionCore.ACEbonds, ACEfrictionCore, ACEbase, Test, StaticArrays, LinearAlgebra, JuLIP
 using ACEbase.Testing
-using ACE.ACEbonds.BondCutoffs: CylindricalCutoff
-using ACE: discrete_jacobi, Rn1pBasis, scal1pbasis, Scal1pBasis,
+using ACEfrictionCore.ACEbonds.BondCutoffs: CylindricalCutoff
+using ACEfrictionCore: discrete_jacobi, Rn1pBasis, scal1pbasis, Scal1pBasis,
            evaluate, # evaluate_d, 
            Trig1pBasis, λ, 
            Product1pBasis, Categorical1pBasis, SimpleSparseBasis, 
            SymmetricBasis, Invariant, PIBasis
 
-using ACE.ACEbonds.BondSelectors: SparseCylindricalBondBasis
+using ACEfrictionCore.ACEbonds.BondSelectors: SparseCylindricalBondBasis
 
 ##
 
@@ -37,20 +37,20 @@ Bsel = SparseCylindricalBondBasis(; maxorder = 3,
          default_maxdeg = maxdeg, 
          weight = Dict{Symbol, Float64}(:m => 1.0, :n => 1.0, :k => 1.0, :l => 1.0), 
                                  )
-# ACE.init1pspec!(B1p, Bsel)
+# ACEfrictionCore.init1pspec!(B1p, Bsel)
 # length(B1p)
 
-basis = SymmetricBasis(ACE.Invariant(), B1p, ACE.NoSym(), Bsel; isreal=true)
+basis = SymmetricBasis(ACEfrictionCore.Invariant(), B1p, ACEfrictionCore.NoSym(), Bsel; isreal=true)
 @show length(basis)
 
-model = ACE.LinearACEModel(basis)
-θ = ACE.params(model)
+model = ACEfrictionCore.LinearACEModel(basis)
+θ = ACEfrictionCore.params(model)
 θ = randn(length(θ)) ./ (1:length(θ)).^2
-ACE.set_params!(model, θ)
+ACEfrictionCore.set_params!(model, θ)
 
 ##
 
-using ACE.ACEbonds: ACEBondPotentialBasis, ACEBondPotential
+using ACEfrictionCore.ACEbonds: ACEBondPotentialBasis, ACEBondPotential
 
 zSi = AtomicNumber(:Si)
 _bases = Dict((zSi, zSi) => basis)
@@ -61,9 +61,9 @@ potbasis = ACEbonds.basis(pot)
 # potbasis = ACEBondPotentialBasis(models, inds, cutoff)
 
 @info("Test parameter setter and getter functions")
-θ1 = ACE.ACEbonds.params(pot)
-ACE.ACEbonds.set_params!(pot,θ1)
-println_slim(@test all(θ1 .== ACE.ACEbonds.params(pot)))
+θ1 = ACEfrictionCore.ACEbonds.params(pot)
+ACEfrictionCore.ACEbonds.set_params!(pot,θ1)
+println_slim(@test all(θ1 .== ACEfrictionCore.ACEbonds.params(pot)))
 
 
 

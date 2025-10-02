@@ -4,8 +4,8 @@
 #---
 ##
 
-using Test, ACE, JuLIP
-using ACE.Testing: ToyModel
+using Test, ACEfrictionCore, JuLIP
+using ACEfrictionCore.Testing: ToyModel
 
 #---
 
