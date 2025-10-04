@@ -136,7 +136,6 @@ include("multiplier.jl")
 include("linearmodel.jl")
 
 include("evaluator.jl")
-# include("grapheval.jl")
 
 include("utils/random.jl")
 @reexport using ACEfrictionCore.Random
